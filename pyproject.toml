@@ -15,4 +15,5 @@ dependencies = [
     "seaborn>=0.13.0",
     "nbstripout>=0.6.0",
     "plotly>=5.0.0",
+    "h2o>=3.46.0.9",
 ]

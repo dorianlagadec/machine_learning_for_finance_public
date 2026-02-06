@@ -63,7 +63,7 @@ if __name__ == "__main__":
             {"loc": 0, "scale": 1},  # X1: normal(0, 1)
             {"mu": 2},  # X2: poisson(2)
             {"n": 10, "p": 0.5},  # X3: binomial(10, 0.5)
-            {"loc": 0, "scale": 1},  # X4: normal(0, 1)
+            {"loc": 2, "scale": 2},  # X4: normal(0, 1)
         ],
         feature_noise_stds=[0.1, 0.1, 0.1, 0.1],
         relationship=session2_relationship,
