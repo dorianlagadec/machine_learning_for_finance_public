@@ -12,4 +12,15 @@ def basic_summary(df):
     df : pd.DataFrame
         Input dataframe
     """
-    # TODO implement this simple function to print basic summary statistics
+    print("=" * 80)
+    print("DATASET SUMMARY")
+    print("=" * 80)
+    print(f"\nShape: {df.shape}")
+    print(f"\nColumns: {df.columns.tolist()}")
+    print(f"\nDate range: {df['timestamp'].min()} to {df['timestamp'].max()}")
+    print(f"\nMissing values:")
+    print(df.isnull().sum())
+    print(f"\nBasic statistics:")
+    print(df.describe())
+    print("=" * 80)
+

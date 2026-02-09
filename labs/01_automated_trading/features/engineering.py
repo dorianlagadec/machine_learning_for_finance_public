@@ -28,7 +28,8 @@ def prepare_features(df, feature_cols=None):
     
     features_df = df[feature_cols].copy()
     
-    # TODO Handle missing values (simple forward fill for now)
+    # Handle missing values (simple forward fill for now)
+    features_df = features_df.ffill().bfill()
     
     return features_df
 
@@ -49,6 +50,5 @@ def prepare_target(df, target_col="returns"):
     pd.Series
         Target variable series
     """
-    # TODO might change target value depending on the use case (classification vs regression)
     return df[target_col].copy()
 

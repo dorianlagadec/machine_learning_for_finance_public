@@ -25,10 +25,7 @@ def calculate_sharpe_ratio(returns, risk_free_rate=0.0):
         return 0.0
     
     excess_returns = returns - risk_free_rate
-
-    # TODO implement Sharpe ratio calculation
-    sharpe = 0.0
-    return sharpe
+    return np.mean(excess_returns) / np.std(returns) * np.sqrt(252)  # Annualized
 
 
 def calculate_max_drawdown(equity_curve):
@@ -48,7 +45,9 @@ def calculate_max_drawdown(equity_curve):
     if len(equity_curve) == 0:
         return 0.0
     
-    # TODO implemnent max drawdown calculation
+    running_max = np.maximum.accumulate(equity_curve)
+    drawdown = (equity_curve - running_max) / running_max
+    return abs(np.min(drawdown))
 
 
 def backtest_strategy(
@@ -85,9 +84,19 @@ def backtest_strategy(
     # Signal at time t predicts return from t to t+1
     df["signal"] = np.where(df["prediction"] > 0, 1, -1)  # 1 = buy, -1 = sell
     
-    # TODO might change the below logic depending on the trade_at parameter (close vs open)
-    df["position"] = df["signal"].astype(int)
-    df["strategy_returns"] = df["position"] * df["returns"]
+    # Position logic:
+    # - If trade_at="close": signal at t → position at t → return from t to t+1
+    #   (This assumes we can trade at close, which is the data leakage scenario)
+    # - If trade_at="open": signal at t → position at t+1 → return from t+1 to t+2
+    if trade_at == "open":
+        # Signal at t → enter position at t+1 → get return from t+1 to t+2
+        df["position"] = df["signal"].shift(1).fillna(0).astype(int)
+        # Use next period's return
+        df["strategy_returns"] = df["position"] * df["returns"].shift(-1).fillna(0)
+    else:  # close
+        # Signal at t → enter position at t → get return from t to t+1
+        df["position"] = df["signal"].astype(int)
+        df["strategy_returns"] = df["position"] * df["returns"]
     
     # Apply transaction costs when position changes
     position_changes = df["position"].diff().abs() > 0
@@ -102,7 +111,7 @@ def backtest_strategy(
     total_return = (df["equity"].iloc[-1] / initial_capital - 1) * 100
     sharpe_ratio = calculate_sharpe_ratio(strategy_returns)
     max_drawdown = calculate_max_drawdown(df["equity"])
-    win_rate = 0.0 # TODO implement win rate calculation (percentage of profitable trades)
+    win_rate = (strategy_returns > 0).sum() / len(strategy_returns) * 100
     
     # ML metrics (on predictions vs actual returns)
     actual_returns = df["returns"].dropna()
