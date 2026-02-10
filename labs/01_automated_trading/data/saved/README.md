@@ -1,0 +1,5 @@
+- `stock_a` has no autocorrelation in synthetic returns
+- `stock_b` has little autocorrelation `AR(1)` in synthetic returns
+- `stock_session2` has a complex non-linear relationship:
+  - 4 features: X1 (normal), X2 (poisson), X3 (binomial), X4 (normal)
+  - Relationship: (X1 + 10*X1² + 100*X1³ + X2 - if X2 > 1 + exp(X3)) + time-dependent component (5*X4 for second half)
