@@ -16,4 +16,6 @@ dependencies = [
     "nbstripout>=0.6.0",
     "plotly>=5.0.0",
     "h2o>=3.46.0.9",
+    "optuna>=4.8.0",
+    "optuna-dashboard>=0.20.0",
 ]
