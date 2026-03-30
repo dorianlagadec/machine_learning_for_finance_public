@@ -1,0 +1,206 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{3}{section.1}\protected@file@percent }
+\newlabel{sec:introduction}{{1}{3}{Introduction}{section.1}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.1}Motivation}{3}{subsection.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.2}Objective}{3}{subsection.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.3}Dataset}{3}{subsection.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.4}Evaluation}{3}{subsection.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {1.5}Paper Structure}{4}{subsection.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {2}Data}{5}{section.2}\protected@file@percent }
+\newlabel{sec:data}{{2}{5}{Data}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Dataset Construction}{5}{subsection.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Descriptive Statistics}{5}{subsection.2.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Descriptive statistics for S\&P 500 daily log-returns (SPY, 1993--2026).}}{5}{table.caption.2}\protected@file@percent }
+\providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
+\newlabel{tab:stats}{{1}{5}{Descriptive statistics for S\&P 500 daily log-returns (SPY, 1993--2026)}{table.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Log-Return Time Series}{6}{subsection.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces S\&P 500 daily log-returns. Three major stress periods are clearly visible.}}{6}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:log_returns}{{1}{6}{S\&P 500 daily log-returns. Three major stress periods are clearly visible}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Realized Volatility and Regime Identification}{6}{subsection.2.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Realized absolute return (target variable $y_t$). The dashed line indicates the 90th-percentile threshold used to define the crisis regime.}}{6}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:realized_vol}{{2}{6}{Realized absolute return (target variable $y_t$). The dashed line indicates the 90th-percentile threshold used to define the crisis regime}{figure.caption.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Market regime statistics.}}{6}{table.caption.5}\protected@file@percent }
+\newlabel{tab:regimes}{{2}{6}{Market regime statistics}{table.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}Autocorrelation Analysis}{7}{subsection.2.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Autocorrelation of raw log-returns (near zero) vs absolute log-returns (strongly positive). The latter justifies using past absolute returns as features.}}{7}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:acf}{{3}{7}{Autocorrelation of raw log-returns (near zero) vs absolute log-returns (strongly positive). The latter justifies using past absolute returns as features}{figure.caption.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Feature Correlation Structure}{8}{subsection.2.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Pearson correlation matrix of the 10 lag features. Adjacent lags are positively correlated, reflecting the persistence of volatility regimes.}}{8}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:corr}{{4}{8}{Pearson correlation matrix of the 10 lag features. Adjacent lags are positively correlated, reflecting the persistence of volatility regimes}{figure.caption.7}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.7}Summary}{8}{subsection.2.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Linear Regression Baseline}{9}{section.3}\protected@file@percent }
+\newlabel{sec:linreg}{{3}{9}{Linear Regression Baseline}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Standard Linear Regression}{9}{subsection.3.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.1}Setup}{9}{subsubsection.3.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.2}Results}{9}{subsubsection.3.1.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Linear regression performance on the test set (scaled units).}}{9}{table.caption.8}\protected@file@percent }
+\newlabel{tab:linreg_full}{{3}{9}{Linear regression performance on the test set (scaled units)}{table.caption.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.3}Coefficient Analysis}{9}{subsubsection.3.1.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces OLS regression coefficients ranked by absolute magnitude.}}{9}{table.caption.9}\protected@file@percent }
+\newlabel{tab:coefficients}{{4}{9}{OLS regression coefficients ranked by absolute magnitude}{table.caption.9}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.1.4}Predicted vs.\ Actual}{10}{subsubsection.3.1.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Linear regression: predicted vs.\ actual realized absolute return. The model systematically underpredicts during crisis episodes.}}{10}{figure.caption.10}\protected@file@percent }
+\newlabel{fig:linreg_pred}{{5}{10}{Linear regression: predicted vs.\ actual realized absolute return. The model systematically underpredicts during crisis episodes}{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Feature Engineering}{10}{subsection.3.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Impact of feature engineering on linear regression performance.}}{10}{table.caption.11}\protected@file@percent }
+\newlabel{tab:feat_eng}{{5}{10}{Impact of feature engineering on linear regression performance}{table.caption.11}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Regime Analysis}{11}{subsection.3.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Linear regression performance by market regime (raw lag features).}}{11}{table.caption.12}\protected@file@percent }
+\newlabel{tab:linreg_regime}{{6}{11}{Linear regression performance by market regime (raw lag features)}{table.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}GARCH(1,1) Baseline}{11}{subsection.3.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.1}Estimated Parameters}{11}{subsubsection.3.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces GARCH(1,1) maximum-likelihood parameter estimates.}}{11}{table.caption.13}\protected@file@percent }
+\newlabel{tab:garch_params}{{7}{11}{GARCH(1,1) maximum-likelihood parameter estimates}{table.caption.13}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.2}Regime Performance}{12}{subsubsection.3.4.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces GARCH(1,1) performance by market regime (unscaled returns).}}{12}{table.caption.14}\protected@file@percent }
+\newlabel{tab:garch_regime}{{8}{12}{GARCH(1,1) performance by market regime (unscaled returns)}{table.caption.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.5}Summary of Limitations}{12}{subsection.3.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces Comparison of linear baseline models (MAE, full sample).}}{12}{table.caption.15}\protected@file@percent }
+\newlabel{tab:linreg_summary}{{9}{12}{Comparison of linear baseline models (MAE, full sample)}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Feedforward Neural Network}{13}{section.4}\protected@file@percent }
+\newlabel{sec:fnn}{{4}{13}{Feedforward Neural Network}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Model and Validation}{13}{subsection.4.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {10}{\ignorespaces Custom NumPy implementation vs.\ PyTorch reference and linear baseline (lag~$=10$).}}{13}{table.caption.18}\protected@file@percent }
+\newlabel{tab:fnn_validation}{{10}{13}{Custom NumPy implementation vs.\ PyTorch reference and linear baseline (lag~$=10$)}{table.caption.18}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Hyperparameter Tuning}{13}{subsection.4.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Activation Function}{13}{subsubsection.4.2.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Validation loss (MSE) over 300 epochs for four activations. ReLU (red, MAE~$=0.607$) reaches the best test MAE; Sigmoid (orange) is still declining at epoch~300.}}{14}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:fnn_activations}{{6}{14}{Validation loss (MSE) over 300 epochs for four activations. ReLU (red, MAE~$=0.607$) reaches the best test MAE; Sigmoid (orange) is still declining at epoch~300}{figure.caption.19}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Weight Initialisation}{14}{subsubsection.4.2.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Convergence by initialisation scheme. Standard $\mathcal  {N}(0,1)$ (red) triggers a gradient explosion at epoch~$\approx 75$ (MSE peaks at~3.3) but ultimately converges to the lowest test MAE. He normal/uniform converge stably and reach comparable performance.}}{15}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:fnn_init}{{7}{15}{Convergence by initialisation scheme. Standard $\mathcal {N}(0,1)$ (red) triggers a gradient explosion at epoch~$\approx 75$ (MSE peaks at~3.3) but ultimately converges to the lowest test MAE. He normal/uniform converge stably and reach comparable performance}{figure.caption.20}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {11}{\ignorespaces Final test MAE by initialisation scheme (ReLU, SGD $\alpha =10^{-3}$).}}{15}{table.caption.21}\protected@file@percent }
+\newlabel{tab:fnn_init}{{11}{15}{Final test MAE by initialisation scheme (ReLU, SGD $\alpha =10^{-3}$)}{table.caption.21}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Optimizer and Momentum}{16}{subsubsection.4.2.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Convergence by optimizer. Plain SGD at three learning rates and SGD with momentum $\mu =0.9$ (with and without LR decay). Momentum dominates all plain-SGD variants; adding decay changes nothing under early stopping.}}{16}{figure.caption.23}\protected@file@percent }
+\newlabel{fig:fnn_optimizer}{{8}{16}{Convergence by optimizer. Plain SGD at three learning rates and SGD with momentum $\mu =0.9$ (with and without LR decay). Momentum dominates all plain-SGD variants; adding decay changes nothing under early stopping}{figure.caption.23}{}}
+\@writefile{toc}{\contentsline {paragraph}{Learning rate and effect of momentum.}{16}{figure.caption.23}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Test MAE as a function of momentum coefficient~$\mu $. Performance improves steadily to $\mu =0.95$; at $\mu =0.99$ the model diverges.}}{17}{figure.caption.25}\protected@file@percent }
+\newlabel{fig:fnn_momentum}{{9}{17}{Test MAE as a function of momentum coefficient~$\mu $. Performance improves steadily to $\mu =0.95$; at $\mu =0.99$ the model diverges}{figure.caption.25}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {12}{\ignorespaces MAE by momentum coefficient (He normal, ReLU, lag~$=10$).}}{17}{table.caption.26}\protected@file@percent }
+\newlabel{tab:fnn_momentum}{{12}{17}{MAE by momentum coefficient (He normal, ReLU, lag~$=10$)}{table.caption.26}{}}
+\@writefile{toc}{\contentsline {paragraph}{Momentum sweep.}{17}{table.caption.26}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces 2-D loss-surface contours (top) and 3-D surfaces (bottom) with weight trajectories for plain SGD (left, blue) and SGD+momentum $\mu =0.9$ (right, green). Momentum follows a wider arc but descends to a darker (lower-loss) region.}}{18}{figure.caption.28}\protected@file@percent }
+\newlabel{fig:fnn_surface}{{10}{18}{2-D loss-surface contours (top) and 3-D surfaces (bottom) with weight trajectories for plain SGD (left, blue) and SGD+momentum $\mu =0.9$ (right, green). Momentum follows a wider arc but descends to a darker (lower-loss) region}{figure.caption.28}{}}
+\@writefile{toc}{\contentsline {paragraph}{Loss surface geometry.}{18}{figure.caption.28}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Temporal Window}{18}{subsubsection.4.2.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Test MAE as a function of lag window~$L$. Performance peaks at $L=3$ (MAE~$0.578$, dashed orange); it generally increases for larger windows with a local dip at lag~$45$.}}{19}{figure.caption.29}\protected@file@percent }
+\newlabel{fig:fnn_lag}{{11}{19}{Test MAE as a function of lag window~$L$. Performance peaks at $L=3$ (MAE~$0.578$, dashed orange); it generally increases for larger windows with a local dip at lag~$45$}{figure.caption.29}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {13}{\ignorespaces Test MAE by lag window (ReLU, He normal, SGD $\mu =0.95$).}}{19}{table.caption.30}\protected@file@percent }
+\newlabel{tab:fnn_lag}{{13}{19}{Test MAE by lag window (ReLU, He normal, SGD $\mu =0.95$)}{table.caption.30}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Diagnostics: Inside the Trained Network}{19}{subsection.4.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.1}Weight and Activation Distributions}{20}{subsubsection.4.3.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces \emph  {Good} configuration (ReLU + He normal). Rows: weight distributions, pre-activations, post-activations. Columns: layers~1, 2, output. Blue~$=$ before training; red~$=$ after. All three layers show substantial weight spreading and healthy activation ranges.}}{20}{figure.caption.31}\protected@file@percent }
+\newlabel{fig:fnn_good}{{12}{20}{\emph {Good} configuration (ReLU + He normal). Rows: weight distributions, pre-activations, post-activations. Columns: layers~1, 2, output. Blue~$=$ before training; red~$=$ after. All three layers show substantial weight spreading and healthy activation ranges}{figure.caption.31}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces \emph  {Bad} configuration (Sigmoid + standard init). Same layout. Weights barely move during training; layer~2 post-activations collapse to the narrow interval $[0.9,\,1.0]$ --- the saturation zone --- transmitting essentially no information to the output.}}{21}{figure.caption.32}\protected@file@percent }
+\newlabel{fig:fnn_bad}{{13}{21}{\emph {Bad} configuration (Sigmoid + standard init). Same layout. Weights barely move during training; layer~2 post-activations collapse to the narrow interval $[0.9,\,1.0]$ --- the saturation zone --- transmitting essentially no information to the output}{figure.caption.32}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.2}Gradient Flow}{22}{subsubsection.4.3.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Gradient $\ell _2$-norms per layer over 150~epochs. Left (ReLU + He): all layers maintain comparable norms throughout. Right (Sigmoid + standard): early layers receive gradients 2--3$\times $ smaller than the output layer.}}{22}{figure.caption.33}\protected@file@percent }
+\newlabel{fig:fnn_grad}{{14}{22}{Gradient $\ell _2$-norms per layer over 150~epochs. Left (ReLU + He): all layers maintain comparable norms throughout. Right (Sigmoid + standard): early layers receive gradients 2--3$\times $ smaller than the output layer}{figure.caption.33}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.3.3}Weight Evolution During Training}{22}{subsubsection.4.3.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Weight distribution snapshots at epochs 0, 10, 30, 100, 200 (ReLU + He normal, best config). All three layers exhibit progressive spreading from a tight initialisation to broad, learned distributions.}}{22}{figure.caption.34}\protected@file@percent }
+\newlabel{fig:fnn_evolution}{{15}{22}{Weight distribution snapshots at epochs 0, 10, 30, 100, 200 (ReLU + He normal, best config). All three layers exhibit progressive spreading from a tight initialisation to broad, learned distributions}{figure.caption.34}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Structural Limitations}{23}{subsection.4.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.1}Order Blindness}{23}{subsubsection.4.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Test MAE for original feature order (blue) vs.\ randomly shuffled features (red, mean of 30~trials) at each lag window. The degradation gap grows from $+0.013$ at lag~$3$ to $+0.032$ at lag~$60$.}}{23}{figure.caption.35}\protected@file@percent }
+\newlabel{fig:fnn_order}{{16}{23}{Test MAE for original feature order (blue) vs.\ randomly shuffled features (red, mean of 30~trials) at each lag window. The degradation gap grows from $+0.013$ at lag~$3$ to $+0.032$ at lag~$60$}{figure.caption.35}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {14}{\ignorespaces Original vs.\ shuffled-input MAE by lag window.}}{23}{table.caption.36}\protected@file@percent }
+\newlabel{tab:fnn_order}{{14}{23}{Original vs.\ shuffled-input MAE by lag window}{table.caption.36}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.2}Regime Blindness}{24}{subsubsection.4.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {17}{\ignorespaces Left: predicted vs.\ true volatility coloured by regime (calm~$=$~blue, crisis~$=$~red). Crisis predictions cluster near zero regardless of the true spike magnitude. Right: MAE by regime --- crisis MAE is $2.77\times $ higher than calm MAE.}}{24}{figure.caption.37}\protected@file@percent }
+\newlabel{fig:fnn_regime}{{17}{24}{Left: predicted vs.\ true volatility coloured by regime (calm~$=$~blue, crisis~$=$~red). Crisis predictions cluster near zero regardless of the true spike magnitude. Right: MAE by regime --- crisis MAE is $2.77\times $ higher than calm MAE}{figure.caption.37}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {15}{\ignorespaces FNN MAE by volatility regime (75th-percentile threshold, $L=3$; note: the Data section uses a 90th-percentile definition).}}{24}{table.caption.38}\protected@file@percent }
+\newlabel{tab:fnn_regime}{{15}{24}{FNN MAE by volatility regime (75th-percentile threshold, $L=3$; note: the Data section uses a 90th-percentile definition)}{table.caption.38}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Summary}{24}{subsection.4.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {16}{\ignorespaces Best FNN configuration and rationale.}}{24}{table.caption.39}\protected@file@percent }
+\newlabel{tab:fnn_best}{{16}{24}{Best FNN configuration and rationale}{table.caption.39}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Recurrent Neural Network}{26}{section.5}\protected@file@percent }
+\newlabel{sec:rnn}{{5}{26}{Recurrent Neural Network}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}From FNN to RNN}{26}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vanishing gradient problem.}{26}{section*.40}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Architecture and Training Setup}{26}{subsection.5.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {17}{\ignorespaces RNN baseline training configuration.}}{27}{table.caption.43}\protected@file@percent }
+\newlabel{tab:rnn_training}{{17}{27}{RNN baseline training configuration}{table.caption.43}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {18}{\ignorespaces Regime-aware test set composition.}}{27}{table.caption.45}\protected@file@percent }
+\newlabel{tab:rnn_regimes}{{18}{27}{Regime-aware test set composition}{table.caption.45}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {18}{\ignorespaces Three regime periods highlighted on the full S\&P~500 log-return series. Calm (2017): low, stable moves. Clustering (2022): sustained elevated volatility. Spikes (Mar--Apr 2020): extreme COVID-crash moves.}}{27}{figure.caption.46}\protected@file@percent }
+\newlabel{fig:rnn_regimes}{{18}{27}{Three regime periods highlighted on the full S\&P~500 log-return series. Calm (2017): low, stable moves. Clustering (2022): sustained elevated volatility. Spikes (Mar--Apr 2020): extreme COVID-crash moves}{figure.caption.46}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}Baseline Results}{27}{subsection.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {19}{\ignorespaces Training and validation loss curves. Early stopping triggers at epoch~58; the gap between train and validation loss indicates mild overfitting that early stopping contains.}}{28}{figure.caption.47}\protected@file@percent }
+\newlabel{fig:rnn_training_curve}{{19}{28}{Training and validation loss curves. Early stopping triggers at epoch~58; the gap between train and validation loss indicates mild overfitting that early stopping contains}{figure.caption.47}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {20}{\ignorespaces Predicted vs.\ true volatility distribution on the validation set. The predicted distribution is visibly narrower: the model compresses outputs toward the mean and systematically under-represents the tails.}}{28}{figure.caption.49}\protected@file@percent }
+\newlabel{fig:rnn_distribution}{{20}{28}{Predicted vs.\ true volatility distribution on the validation set. The predicted distribution is visibly narrower: the model compresses outputs toward the mean and systematically under-represents the tails}{figure.caption.49}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {21}{\ignorespaces Per-regime evaluation. For each regime: predicted vs.\ true volatility time series (left) and distribution comparison (right). Errors grow from calm to clustering to spikes, in line with the mean-reversion bias.}}{29}{figure.caption.51}\protected@file@percent }
+\newlabel{fig:rnn_regime_eval}{{21}{29}{Per-regime evaluation. For each regime: predicted vs.\ true volatility time series (left) and distribution comparison (right). Errors grow from calm to clustering to spikes, in line with the mean-reversion bias}{figure.caption.51}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {19}{\ignorespaces RNN MAE by market regime.}}{29}{table.caption.52}\protected@file@percent }
+\newlabel{tab:rnn_regime_mae}{{19}{29}{RNN MAE by market regime}{table.caption.52}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Diagnostics: What Did the Model Learn?}{30}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.1}Weight Distributions}{30}{subsubsection.5.4.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {22}{\ignorespaces Weight distributions before training. $W_{ih}$ (input$\to $hidden), $W_{hh}$ (hidden$\to $hidden, the memory matrix), and the linear head. All initialised in tight distributions around zero.}}{30}{figure.caption.53}\protected@file@percent }
+\newlabel{fig:rnn_weights_before}{{22}{30}{Weight distributions before training. $W_{ih}$ (input$\to $hidden), $W_{hh}$ (hidden$\to $hidden, the memory matrix), and the linear head. All initialised in tight distributions around zero}{figure.caption.53}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {23}{\ignorespaces Weight distributions after training. $W_{hh}$ shows the most pronounced reshaping: the distribution widens and develops structure, confirming that the recurrent pathway is actively used by the trained model.}}{30}{figure.caption.54}\protected@file@percent }
+\newlabel{fig:rnn_weights_after}{{23}{30}{Weight distributions after training. $W_{hh}$ shows the most pronounced reshaping: the distribution widens and develops structure, confirming that the recurrent pathway is actively used by the trained model}{figure.caption.54}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.2}Hidden State Activity}{31}{subsubsection.5.4.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {24}{\ignorespaces Average hidden state activation at each sequence position before training. Activity rises from the zero initialisation then plateaus, reflecting the warmup from $\mathbf  {h}_0 = \mathbf  {0}$.}}{31}{figure.caption.55}\protected@file@percent }
+\newlabel{fig:rnn_hidden_before}{{24}{31}{Average hidden state activation at each sequence position before training. Activity rises from the zero initialisation then plateaus, reflecting the warmup from $\mathbf {h}_0 = \mathbf {0}$}{figure.caption.55}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {25}{\ignorespaces Average hidden state activation after training. The shape (rise then plateau) is unchanged, but the saturation level has increased from $\approx 0.125$ to $\approx 0.325$ --- a $2.5\times $ amplification --- indicating that training taught the network to store more information in each hidden state.}}{31}{figure.caption.56}\protected@file@percent }
+\newlabel{fig:rnn_hidden_after}{{25}{31}{Average hidden state activation after training. The shape (rise then plateau) is unchanged, but the saturation level has increased from $\approx 0.125$ to $\approx 0.325$ --- a $2.5\times $ amplification --- indicating that training taught the network to store more information in each hidden state}{figure.caption.56}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.4.3}Input Sensitivity by Lag}{32}{subsubsection.5.4.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {26}{\ignorespaces Input sensitivity before training: how much does perturbing $\mathbf  {x}_t$ move the final prediction? Sensitivity collapses at lags 2--3; the model is effectively ignoring all but the most recent inputs.}}{32}{figure.caption.57}\protected@file@percent }
+\newlabel{fig:rnn_sensitivity_before}{{26}{32}{Input sensitivity before training: how much does perturbing $\mathbf {x}_t$ move the final prediction? Sensitivity collapses at lags 2--3; the model is effectively ignoring all but the most recent inputs}{figure.caption.57}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {27}{\ignorespaces Input sensitivity after training. Sensitivity is now distributed across the full 20-lag window, demonstrating that training has taught the recurrent pathway to route historical context to the final prediction.}}{32}{figure.caption.58}\protected@file@percent }
+\newlabel{fig:rnn_sensitivity_after}{{27}{32}{Input sensitivity after training. Sensitivity is now distributed across the full 20-lag window, demonstrating that training has taught the recurrent pathway to route historical context to the final prediction}{figure.caption.58}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.5}Failure Analysis}{33}{subsection.5.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.5.1}Residuals Over Time}{33}{subsubsection.5.5.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {28}{\ignorespaces Residuals over time by regime. White line: true absolute return. Coloured area: absolute prediction error $|y - \hat  {y}|$. The error envelope tracks the true volatility signal: small and stable in the calm regime, elevated in clustering, and spiking sharply during the COVID crash.}}{33}{figure.caption.59}\protected@file@percent }
+\newlabel{fig:rnn_residuals}{{28}{33}{Residuals over time by regime. White line: true absolute return. Coloured area: absolute prediction error $|y - \hat {y}|$. The error envelope tracks the true volatility signal: small and stable in the calm regime, elevated in clustering, and spiking sharply during the COVID crash}{figure.caption.59}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.5.2}Error vs Magnitude}{34}{subsubsection.5.5.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {29}{\ignorespaces True volatility vs.\ prediction error, coloured by regime. The positive slope confirms mean-reversion bias across all regimes. Histograms (right) show the direction of the bias per regime: the spikes histogram is shifted furthest left (systematic under-prediction); the calm histogram is nearly centred.}}{34}{figure.caption.60}\protected@file@percent }
+\newlabel{fig:rnn_error_magnitude}{{29}{34}{True volatility vs.\ prediction error, coloured by regime. The positive slope confirms mean-reversion bias across all regimes. Histograms (right) show the direction of the bias per regime: the spikes histogram is shifted furthest left (systematic under-prediction); the calm histogram is nearly centred}{figure.caption.60}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.5.3}Worst Predictions Per Regime}{34}{subsubsection.5.5.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {30}{\ignorespaces Worst predictions --- calm regime. Failures are simply the largest true volatility values within the regime; there is no identifiable input pattern. The model's error is magnitude-driven, not structure-driven.}}{35}{figure.caption.61}\protected@file@percent }
+\newlabel{fig:rnn_worst_calm}{{30}{35}{Worst predictions --- calm regime. Failures are simply the largest true volatility values within the regime; there is no identifiable input pattern. The model's error is magnitude-driven, not structure-driven}{figure.caption.61}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {31}{\ignorespaces Worst predictions --- clustering regime. Same pattern as calm: failures coincide with the largest true values; no systematic lookback pattern is visible.}}{35}{figure.caption.62}\protected@file@percent }
+\newlabel{fig:rnn_worst_clustering}{{31}{35}{Worst predictions --- clustering regime. Same pattern as calm: failures coincide with the largest true values; no systematic lookback pattern is visible}{figure.caption.62}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {32}{\ignorespaces Worst predictions --- spikes regime. Both worst cases show extreme COVID-level volatility ($\approx 0.046$) already in the input window. The model's prediction is far too small: it never learned to output values of this magnitude because they were essentially absent from the training set.}}{36}{figure.caption.63}\protected@file@percent }
+\newlabel{fig:rnn_worst_spikes}{{32}{36}{Worst predictions --- spikes regime. Both worst cases show extreme COVID-level volatility ($\approx 0.046$) already in the input window. The model's prediction is far too small: it never learned to output values of this magnitude because they were essentially absent from the training set}{figure.caption.63}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.6}Vanishing Gradient Diagnosis}{36}{subsection.5.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.6.1}$W_{hh}$ Spectral Radius}{36}{subsubsection.5.6.1}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {33}{\ignorespaces Singular value spectrum of $W_{hh}$ after training. Spectral radius $\rho = 1.4$ (exploding regime overall), but roughly 57 of the 64 directions lie below~1. Training has deliberately pushed 5--7 directions above~1 to maintain gradient flow through the tanh saturation; gradient clipping prevents these from causing instability.}}{36}{figure.caption.64}\protected@file@percent }
+\newlabel{fig:rnn_spectrum}{{33}{36}{Singular value spectrum of $W_{hh}$ after training. Spectral radius $\rho = 1.4$ (exploding regime overall), but roughly 57 of the 64 directions lie below~1. Training has deliberately pushed 5--7 directions above~1 to maintain gradient flow through the tanh saturation; gradient clipping prevents these from causing instability}{figure.caption.64}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.6.2}Output Sensitivity per Time Step}{37}{subsubsection.5.6.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {34}{\ignorespaces Output sensitivity to the hidden state at each time step: $\partial \hat  {y}/\partial \mathbf  {h}_t$ as a function of lag. Sensitivity decays by 50\,\% at step~1 and is essentially zero by step~2 --- the prediction is nearly insensitive to any hidden state older than one step.}}{37}{figure.caption.65}\protected@file@percent }
+\newlabel{fig:rnn_grad_norms}{{34}{37}{Output sensitivity to the hidden state at each time step: $\partial \hat {y}/\partial \mathbf {h}_t$ as a function of lag. Sensitivity decays by 50\,\% at step~1 and is essentially zero by step~2 --- the prediction is nearly insensitive to any hidden state older than one step}{figure.caption.65}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.6.3}Effective Memory}{37}{subsubsection.5.6.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {35}{\ignorespaces Effective memory: correlation between the final hidden state $\mathbf  {h}_T$ and each input $\mathbf  {x}_t$ at different lags. Despite the near-zero gradient norms beyond lag~2, the correlation decays gradually across the full 20-lag window and remains meaningful at lags 15--20.}}{37}{figure.caption.66}\protected@file@percent }
+\newlabel{fig:rnn_effective_memory}{{35}{37}{Effective memory: correlation between the final hidden state $\mathbf {h}_T$ and each input $\mathbf {x}_t$ at different lags. Despite the near-zero gradient norms beyond lag~2, the correlation decays gradually across the full 20-lag window and remains meaningful at lags 15--20}{figure.caption.66}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.6.4}Effective Memory by Regime}{38}{subsubsection.5.6.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {36}{\ignorespaces Effective memory split by regime. Calm: smooth exponential decay from $\approx 0.55$ to $0.05$--$0.12$. Clustering: similar shape but sharper drop, concentrated on the most recent days. Spikes: highest initial correlation ($\approx 0.60$) with a non-monotonic profile and secondary peaks at lags~7--11 and~12--17, reflecting the autocorrelation structure of the COVID crash itself.}}{38}{figure.caption.67}\protected@file@percent }
+\newlabel{fig:rnn_memory_regime}{{36}{38}{Effective memory split by regime. Calm: smooth exponential decay from $\approx 0.55$ to $0.05$--$0.12$. Clustering: similar shape but sharper drop, concentrated on the most recent days. Spikes: highest initial correlation ($\approx 0.60$) with a non-monotonic profile and secondary peaks at lags~7--11 and~12--17, reflecting the autocorrelation structure of the COVID crash itself}{figure.caption.67}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.7}Hyperparameter Grid Search}{39}{subsection.5.7}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {20}{\ignorespaces Top-5 configurations from the grid search (ranked by validation MAE). Spread from rank~1 to rank~48 is only $0.00042$ in validation MAE.}}{39}{table.caption.68}\protected@file@percent }
+\newlabel{tab:rnn_gridsearch}{{20}{39}{Top-5 configurations from the grid search (ranked by validation MAE). Spread from rank~1 to rank~48 is only $0.00042$ in validation MAE}{table.caption.68}{}}
+\@writefile{toc}{\contentsline {paragraph}{Architecture is the ceiling, not hyperparameters.}{39}{section*.69}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Sequence length matters, but only for the spikes regime.}{39}{section*.70}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.8}Summary}{39}{subsection.5.8}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {21}{\ignorespaces Best RNN configuration (baseline).}}{39}{table.caption.71}\protected@file@percent }
+\newlabel{tab:rnn_best}{{21}{39}{Best RNN configuration (baseline)}{table.caption.71}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Conclusion}{41}{section.6}\protected@file@percent }
+\newlabel{sec:conclusion}{{6}{41}{Conclusion}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Cross-Model Comparison}{41}{subsection.6.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {22}{\ignorespaces Cross-model comparison (MAE on test set, standardised target). Lower is better.}}{41}{table.caption.72}\protected@file@percent }
+\newlabel{tab:final_comparison}{{22}{41}{Cross-model comparison (MAE on test set, standardised target). Lower is better}{table.caption.72}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Key Findings}{41}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Non-linearity matters, but is not enough.}{41}{section*.73}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Temporal structure is a genuine source of signal.}{41}{section*.74}\protected@file@percent }
+\bibstyle{plainnat}
+\@writefile{toc}{\contentsline {paragraph}{Regime blindness is the dominant unsolved challenge.}{42}{section*.75}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Limitations and Future Work}{42}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Gated recurrent architectures.}{42}{section*.76}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Regime-aware modelling.}{42}{section*.77}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Multivariate inputs.}{42}{section*.78}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Attention mechanisms.}{42}{section*.79}\protected@file@percent }
+\gdef \@abspage@last{42}

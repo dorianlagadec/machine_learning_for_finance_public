@@ -1,0 +1,77 @@
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Motivation}{3}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Objective}{3}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Dataset}{3}{subsection.1.3}%
+\contentsline {subsection}{\numberline {1.4}Evaluation}{3}{subsection.1.4}%
+\contentsline {subsection}{\numberline {1.5}Paper Structure}{4}{subsection.1.5}%
+\contentsline {section}{\numberline {2}Data}{5}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Dataset Construction}{5}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Descriptive Statistics}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Log-Return Time Series}{6}{subsection.2.3}%
+\contentsline {subsection}{\numberline {2.4}Realized Volatility and Regime Identification}{6}{subsection.2.4}%
+\contentsline {subsection}{\numberline {2.5}Autocorrelation Analysis}{7}{subsection.2.5}%
+\contentsline {subsection}{\numberline {2.6}Feature Correlation Structure}{8}{subsection.2.6}%
+\contentsline {subsection}{\numberline {2.7}Summary}{8}{subsection.2.7}%
+\contentsline {section}{\numberline {3}Linear Regression Baseline}{9}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Standard Linear Regression}{9}{subsection.3.1}%
+\contentsline {subsubsection}{\numberline {3.1.1}Setup}{9}{subsubsection.3.1.1}%
+\contentsline {subsubsection}{\numberline {3.1.2}Results}{9}{subsubsection.3.1.2}%
+\contentsline {subsubsection}{\numberline {3.1.3}Coefficient Analysis}{9}{subsubsection.3.1.3}%
+\contentsline {subsubsection}{\numberline {3.1.4}Predicted vs.\ Actual}{10}{subsubsection.3.1.4}%
+\contentsline {subsection}{\numberline {3.2}Feature Engineering}{10}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Regime Analysis}{11}{subsection.3.3}%
+\contentsline {subsection}{\numberline {3.4}GARCH(1,1) Baseline}{11}{subsection.3.4}%
+\contentsline {subsubsection}{\numberline {3.4.1}Estimated Parameters}{11}{subsubsection.3.4.1}%
+\contentsline {subsubsection}{\numberline {3.4.2}Regime Performance}{12}{subsubsection.3.4.2}%
+\contentsline {subsection}{\numberline {3.5}Summary of Limitations}{12}{subsection.3.5}%
+\contentsline {section}{\numberline {4}Feedforward Neural Network}{13}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Model and Validation}{13}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Hyperparameter Tuning}{13}{subsection.4.2}%
+\contentsline {subsubsection}{\numberline {4.2.1}Activation Function}{13}{subsubsection.4.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2}Weight Initialisation}{14}{subsubsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.3}Optimizer and Momentum}{16}{subsubsection.4.2.3}%
+\contentsline {paragraph}{Learning rate and effect of momentum.}{16}{figure.caption.23}%
+\contentsline {paragraph}{Momentum sweep.}{17}{table.caption.26}%
+\contentsline {paragraph}{Loss surface geometry.}{18}{figure.caption.28}%
+\contentsline {subsubsection}{\numberline {4.2.4}Temporal Window}{18}{subsubsection.4.2.4}%
+\contentsline {subsection}{\numberline {4.3}Diagnostics: Inside the Trained Network}{19}{subsection.4.3}%
+\contentsline {subsubsection}{\numberline {4.3.1}Weight and Activation Distributions}{20}{subsubsection.4.3.1}%
+\contentsline {subsubsection}{\numberline {4.3.2}Gradient Flow}{22}{subsubsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.3}Weight Evolution During Training}{22}{subsubsection.4.3.3}%
+\contentsline {subsection}{\numberline {4.4}Structural Limitations}{23}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Order Blindness}{23}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Regime Blindness}{24}{subsubsection.4.4.2}%
+\contentsline {subsection}{\numberline {4.5}Summary}{24}{subsection.4.5}%
+\contentsline {section}{\numberline {5}Recurrent Neural Network}{26}{section.5}%
+\contentsline {subsection}{\numberline {5.1}From FNN to RNN}{26}{subsection.5.1}%
+\contentsline {paragraph}{Vanishing gradient problem.}{26}{section*.40}%
+\contentsline {subsection}{\numberline {5.2}Architecture and Training Setup}{26}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Baseline Results}{27}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Diagnostics: What Did the Model Learn?}{30}{subsection.5.4}%
+\contentsline {subsubsection}{\numberline {5.4.1}Weight Distributions}{30}{subsubsection.5.4.1}%
+\contentsline {subsubsection}{\numberline {5.4.2}Hidden State Activity}{31}{subsubsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.3}Input Sensitivity by Lag}{32}{subsubsection.5.4.3}%
+\contentsline {subsection}{\numberline {5.5}Failure Analysis}{33}{subsection.5.5}%
+\contentsline {subsubsection}{\numberline {5.5.1}Residuals Over Time}{33}{subsubsection.5.5.1}%
+\contentsline {subsubsection}{\numberline {5.5.2}Error vs Magnitude}{34}{subsubsection.5.5.2}%
+\contentsline {subsubsection}{\numberline {5.5.3}Worst Predictions Per Regime}{34}{subsubsection.5.5.3}%
+\contentsline {subsection}{\numberline {5.6}Vanishing Gradient Diagnosis}{36}{subsection.5.6}%
+\contentsline {subsubsection}{\numberline {5.6.1}$W_{hh}$ Spectral Radius}{36}{subsubsection.5.6.1}%
+\contentsline {subsubsection}{\numberline {5.6.2}Output Sensitivity per Time Step}{37}{subsubsection.5.6.2}%
+\contentsline {subsubsection}{\numberline {5.6.3}Effective Memory}{37}{subsubsection.5.6.3}%
+\contentsline {subsubsection}{\numberline {5.6.4}Effective Memory by Regime}{38}{subsubsection.5.6.4}%
+\contentsline {subsection}{\numberline {5.7}Hyperparameter Grid Search}{39}{subsection.5.7}%
+\contentsline {paragraph}{Architecture is the ceiling, not hyperparameters.}{39}{section*.69}%
+\contentsline {paragraph}{Sequence length matters, but only for the spikes regime.}{39}{section*.70}%
+\contentsline {subsection}{\numberline {5.8}Summary}{39}{subsection.5.8}%
+\contentsline {section}{\numberline {6}Conclusion}{41}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Cross-Model Comparison}{41}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Key Findings}{41}{subsection.6.2}%
+\contentsline {paragraph}{Non-linearity matters, but is not enough.}{41}{section*.73}%
+\contentsline {paragraph}{Temporal structure is a genuine source of signal.}{41}{section*.74}%
+\contentsline {paragraph}{Regime blindness is the dominant unsolved challenge.}{42}{section*.75}%
+\contentsline {subsection}{\numberline {6.3}Limitations and Future Work}{42}{subsection.6.3}%
+\contentsline {paragraph}{Gated recurrent architectures.}{42}{section*.76}%
+\contentsline {paragraph}{Regime-aware modelling.}{42}{section*.77}%
+\contentsline {paragraph}{Multivariate inputs.}{42}{section*.78}%
+\contentsline {paragraph}{Attention mechanisms.}{42}{section*.79}%

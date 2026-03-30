@@ -1,0 +1,451 @@
+\section{Feedforward Neural Network}
+\label{sec:fnn}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Model and Validation}
+
+\subsubsection*{Architecture}
+
+The baseline FNN maps the $L$ most recent signed log-returns to a scalar
+one-day-ahead volatility forecast through two hidden layers:
+\[
+  \mathbf{x} \in \mathbb{R}^{L}
+  \;\xrightarrow{\;\text{Dense}_{32}\;}\;
+  \mathbb{R}^{32}
+  \;\xrightarrow{\;\text{Dense}_{16}\;}\;
+  \mathbb{R}^{16}
+  \;\xrightarrow{\;\text{Dense}_{1}\;}\;
+  \hat{y} \in \mathbb{R}_{+}.
+\]
+Both hidden layers use \textbf{ReLU} activations and \textbf{He normal}
+initialisation; the output neuron is linear. This choice of activation directly
+addresses the \emph{symmetry blindness} of the linear baseline: two composed ReLU
+layers can approximate $\lvert x\rvert$ from signed inputs, recovering the
+signal in $r_t$ without manual feature engineering.
+
+\subsubsection*{Implementation validation}
+
+The custom NumPy framework (\texttt{dl\_utils}) is cross-checked against an
+equivalent PyTorch implementation before any tuning.
+
+\begin{table}[H]
+  \centering
+  \caption{Custom NumPy implementation vs.\ PyTorch reference and linear baseline (lag~$=10$).}
+  \label{tab:fnn_validation}
+  \begin{tabular}{lcc}
+    \toprule
+    Implementation & MAE & Note \\
+    \midrule
+    Custom \texttt{dl\_utils} (NumPy) & 0.6046 & dropout $= 0.5$ on layer~1 \\
+    PyTorch reference                 & 0.5850 & no dropout \\
+    Linear regression baseline        & 0.6377 & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Both neural implementations beat the linear baseline.
+The small gap between them stems from the dropout regularisation applied only in
+the NumPy model: dropout slows convergence, raising the early-stopped MAE slightly.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Hyperparameter Tuning}
+
+All experiments in this section share the same default training protocol unless
+stated otherwise: MSE loss, batch size~32, maximum 300~epochs, early stopping
+with patience~$=10$ evaluated every 5~epochs.
+
+% ──────────────────────────────────────
+\subsubsection{Activation Function}
+
+Four activations are compared on the $32{\to}16{\to}1$ architecture with plain
+SGD ($\alpha=10^{-3}$, learning rate).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_41.png}
+  \caption{Validation loss (MSE) over 300 epochs for four activations.
+    ReLU (red, MAE~$=0.607$) reaches the best test MAE; Sigmoid (orange) is still
+    declining at epoch~300.}
+  \label{fig:fnn_activations}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Sigmoid} (MAE~$0.612$): gradient saturation dramatically slows
+        learning; the validation loss has not plateaued by epoch~300. The
+        model does ultimately converge at this shallow depth after
+        \texttt{StandardScaler} normalisation, but requires far more epochs
+        than the others.
+  \item \textbf{Tanh} (MAE~$0.613$): converges the fastest (before epoch~30),
+        yet it reaches the \emph{worst} test MAE. Fast training convergence does
+        not imply good generalisation.
+  \item \textbf{ReLU} (MAE~$0.607$, best): rapid, stable convergence with mild
+        oscillations attributable to occasional dead-neuron events.
+  \item \textbf{LeakyReLU} (MAE~$0.608$): virtually identical to ReLU.
+        After \texttt{StandardScaler} normalisation the input distribution is
+        centred, so the dying-neuron advantage of LeakyReLU is negligible.
+\end{itemize}
+
+\noindent\textbf{Decision:} ReLU for all subsequent experiments.
+
+% ──────────────────────────────────────
+\subsubsection{Weight Initialisation}
+
+Five initialisation schemes are compared, all paired with ReLU.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_42.png}
+  \caption{Convergence by initialisation scheme. Standard $\mathcal{N}(0,1)$
+    (red) triggers a gradient explosion at epoch~$\approx 75$ (MSE peaks at~3.3)
+    but ultimately converges to the lowest test MAE. He normal/uniform converge
+    stably and reach comparable performance.}
+  \label{fig:fnn_init}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Final test MAE by initialisation scheme (ReLU, SGD $\alpha=10^{-3}$).}
+  \label{tab:fnn_init}
+  \begin{tabular}{lc}
+    \toprule
+    Initialisation & MAE \\
+    \midrule
+    Standard $\mathcal{N}(0,1)$ & 0.604 \\
+    He normal                   & 0.607 \\
+    He uniform                  & 0.607 \\
+    Glorot normal               & 0.613 \\
+    LeCun normal                & 0.616 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Standard initialisation achieves the \emph{lowest} final MAE but only through an
+unreliable mechanism: the gradient explosion near epoch~75 (MSE~$\to 3.3$)
+accidentally perturbs the weights out of a shallow basin. On a harder
+problem or a deeper network this spike would cause permanent divergence.
+He normal reaches near-identical performance ($+0.003$) with \emph{monotone,
+predictable} convergence, and is theoretically motivated: for ReLU layers,
+$\operatorname{Var}(W) = 2/n_{\mathrm{in}}$ (where $n_{\mathrm{in}}$ is the number
+of inputs to the layer) ensures that activation variance is preserved layer-to-layer, preventing both vanishing and exploding signals.
+
+\noindent\textbf{Decision:} He normal for all subsequent experiments.
+
+% ──────────────────────────────────────
+\subsubsection{Optimizer and Momentum}
+
+\paragraph{Learning rate and effect of momentum.}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_43.png}
+  \caption{Convergence by optimizer. Plain SGD at three learning rates and
+    SGD with momentum $\mu=0.9$ (with and without LR decay). Momentum
+    dominates all plain-SGD variants; adding decay changes nothing under
+    early stopping.}
+  \label{fig:fnn_optimizer}
+\end{figure}
+
+\begin{itemize}
+  \item $\alpha=10^{-4}$: convergence is too slow (MAE~$0.629$ at epoch~300,
+        still declining).
+  \item $\alpha=10^{-3}$: stable convergence (MAE~$0.607$).
+  \item $\alpha=10^{-2}$: early overshoot followed by convergence to a worse
+        minimum (MAE~$0.618$).
+  \item SGD + momentum $\mu=0.9$ (MAE~$0.591$): reaches the final MAE of
+        plain SGD ($\alpha=10^{-3}$) roughly 10$\times$ faster, then converges
+        further.
+  \item SGD + momentum + LR decay (MAE~$0.591$): identical to plain momentum.
+        Early stopping triggers before the decay schedule has a meaningful
+        effect, rendering it redundant.
+\end{itemize}
+
+\paragraph{Momentum sweep.}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_44.png}
+  \caption{Test MAE as a function of momentum coefficient~$\mu$.
+    Performance improves steadily to $\mu=0.95$; at $\mu=0.99$ the model
+    diverges.}
+  \label{fig:fnn_momentum}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{MAE by momentum coefficient (He normal, ReLU, lag~$=10$).}
+  \label{tab:fnn_momentum}
+  \begin{tabular}{lc}
+    \toprule
+    $\mu$ & MAE \\
+    \midrule
+    0.00 & 0.607 \\
+    0.50 & 0.602 \\
+    0.70 & 0.602 \\
+    0.90 & 0.591 \\
+    0.95 & \textbf{0.587} \\
+    0.99 & diverges \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Performance improves steadily up to $\mu=0.95$, then diverges at $\mu=0.99$.
+At very high momentum the accumulated velocity overpowers the corrective gradient
+signal, causing the weights to oscillate with growing amplitude.
+
+\noindent\textbf{Decision:} $\mu=0.95$ for all subsequent experiments.
+
+\paragraph{Loss surface geometry.}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_45.png}
+  \caption{2-D loss-surface contours (top) and 3-D surfaces (bottom) with
+    weight trajectories for plain SGD (left, blue) and SGD+momentum $\mu=0.9$
+    (right, green). Momentum follows a wider arc but descends to a darker
+    (lower-loss) region.}
+  \label{fig:fnn_surface}
+\end{figure}
+
+Plain SGD takes short, monotone gradient steps and stalls in the first basin it
+enters. Momentum accumulates velocity in the consistent gradient direction,
+allowing it to traverse flat saddle regions and settle in a deeper minimum ---
+visible in the contour plot as the green trajectory reaching a darker zone
+unreachable by the blue one.
+
+% ──────────────────────────────────────
+\subsubsection{Temporal Window}
+
+The lag $L$ is swept across $\{1,3,5,10,20,30,45,60\}$ using the best
+configuration found above (ReLU, He normal, SGD $\mu=0.95$).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_49.png}
+  \caption{Test MAE as a function of lag window~$L$. Performance peaks at
+    $L=3$ (MAE~$0.578$, dashed orange); it generally increases for larger
+    windows with a local dip at lag~$45$.}
+  \label{fig:fnn_lag}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Test MAE by lag window (ReLU, He normal, SGD $\mu=0.95$).}
+  \label{tab:fnn_lag}
+  \begin{tabular}{lc}
+    \toprule
+    Lag $L$ & MAE \\
+    \midrule
+    1  & 0.629 \\
+    \textbf{3}  & \textbf{0.578} \\
+    5  & 0.589 \\
+    10 & 0.591 \\
+    20 & 0.602 \\
+    30 & 0.608 \\
+    45 & 0.600 \\
+    60 & 0.614 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Performance peaks at $L=3$ and generally degrades beyond, though not strictly
+monotonically (lag~$=45$ recovers slightly below lag~$=30$, a seed-dependent
+fluctuation). The pattern reflects a structural limitation of the FNN: all lag
+features receive independently learned fixed weights, so the network has no
+mechanism to discount distant, noisy lags. Beyond 3~days, the additional
+information added by older returns is outweighed by the noise they introduce.
+
+\noindent\textbf{Decision:} $L=3$ for all subsequent experiments.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Diagnostics: Inside the Trained Network}
+
+The figures in this section do not drive hyperparameter choices; they explain
+\emph{why} the chosen configuration (ReLU + He normal) works and why the bad
+configuration (Sigmoid + standard init) fails.
+
+% ──────────────────────────────────────
+\subsubsection{Weight and Activation Distributions}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_46.png}
+  \caption{\emph{Good} configuration (ReLU + He normal). Rows: weight
+    distributions, pre-activations, post-activations. Columns: layers~1, 2,
+    output. Blue~$=$ before training; red~$=$ after.
+    All three layers show substantial weight spreading and healthy activation
+    ranges.}
+  \label{fig:fnn_good}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_47.png}
+  \caption{\emph{Bad} configuration (Sigmoid + standard init). Same layout.
+    Weights barely move during training; layer~2 post-activations collapse to
+    the narrow interval $[0.9,\,1.0]$ --- the saturation zone --- transmitting
+    essentially no information to the output.}
+  \label{fig:fnn_bad}
+\end{figure}
+
+With ReLU + He, weight distributions broaden during training and pre-activations
+span a wide range: every neuron is active and contributing.
+With Sigmoid + standard init, the gradient explosion compresses post-activations
+into Sigmoid's saturation zone; backpropagated gradients become near-zero and
+learning stalls. The distribution collapse renders vanishing gradients directly
+visible without gradient inspection.
+
+% ──────────────────────────────────────
+\subsubsection{Gradient Flow}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_48.png}
+  \caption{Gradient $\ell_2$-norms per layer over 150~epochs.
+    Left (ReLU + He): all layers maintain comparable norms throughout.
+    Right (Sigmoid + standard): early layers receive gradients 2--3$\times$
+    smaller than the output layer.}
+  \label{fig:fnn_grad}
+\end{figure}
+
+With ReLU, the derivative equals~1 for every active neuron, so gradients
+propagate backward without attenuation: all layers update at the same scale.
+With Sigmoid, the derivative is bounded by~$0.25$ and approaches~$0$ in
+saturation; compounded across layers this concentrates learning at the output
+while the input layer stagnates. In a deeper network this effect would be
+catastrophic.
+
+% ──────────────────────────────────────
+\subsubsection{Weight Evolution During Training}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_412.png}
+  \caption{Weight distribution snapshots at epochs 0, 10, 30, 100, 200
+    (ReLU + He normal, best config). All three layers exhibit progressive
+    spreading from a tight initialisation to broad, learned distributions.}
+  \label{fig:fnn_evolution}
+\end{figure}
+
+At epoch~0 the He initialisation produces narrow Gaussian-like distributions in
+all layers. By epoch~200, layers~1 and~2 have spread considerably and the output
+layer has developed a multimodal structure. The monotone spreading across every
+layer confirms that no part of the network is frozen or dead: gradient updates
+reach and reshape all weights throughout training.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Structural Limitations}
+
+Despite a 9\,\% improvement over the linear baseline, the FNN has two
+architectural limitations that no amount of hyperparameter tuning can address.
+
+% ──────────────────────────────────────
+\subsubsection{Order Blindness}
+
+The FNN receives the $L$ lag features as a flat, unordered vector.
+To measure how much temporal ordering it \emph{implicitly} exploits, we evaluate
+the trained model on 30 random permutations of the input features and report the
+mean MAE gap.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_410.png}
+  \caption{Test MAE for original feature order (blue) vs.\ randomly shuffled
+    features (red, mean of 30~trials) at each lag window. The degradation gap
+    grows from $+0.013$ at lag~$3$ to $+0.032$ at lag~$60$.}
+  \label{fig:fnn_order}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{Original vs.\ shuffled-input MAE by lag window.}
+  \label{tab:fnn_order}
+  \begin{tabular}{lccc}
+    \toprule
+    Lag $L$ & Original & Shuffled & Gap \\
+    \midrule
+    3  & 0.578 & 0.591 & $+$0.013 \\
+    5  & 0.589 & 0.608 & $+$0.019 \\
+    10 & 0.591 & 0.599 & $+$0.008 \\
+    20 & 0.602 & 0.626 & $+$0.024 \\
+    45 & 0.600 & 0.626 & $+$0.026 \\
+    60 & 0.614 & 0.646 & $+$0.032 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The network has learned to exploit recency through its weight magnitudes ---
+recent lags receive larger learned weights --- but this is an emergent property
+of optimisation, not a guarantee of the architecture. The growing gap with lag
+window confirms that richer temporal structure is present and the FNN partially
+uses it; a recurrent architecture would process inputs sequentially, making
+temporal ordering a structural rather than a learned property.
+
+% ──────────────────────────────────────
+\subsubsection{Regime Blindness}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_411.png}
+  \caption{Left: predicted vs.\ true volatility coloured by regime
+    (calm~$=$~blue, crisis~$=$~red). Crisis predictions cluster near zero
+    regardless of the true spike magnitude. Right: MAE by regime ---
+    crisis MAE is $2.77\times$ higher than calm MAE.}
+  \label{fig:fnn_regime}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{FNN MAE by volatility regime (75th-percentile threshold, $L=3$;
+    note: the Data section uses a 90th-percentile definition).}
+  \label{tab:fnn_regime}
+  \begin{tabular}{lcc}
+    \toprule
+    Regime & MAE & Share \\
+    \midrule
+    Calm   ($\sigma_t < \sigma^{*}_{75}$)     & 0.402 & 75\,\% \\
+    Crisis ($\sigma_t \geq \sigma^{*}_{75}$)  & 1.112 & 25\,\% \\
+    \midrule
+    Crisis / Calm ratio & $2.77\times$ & \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The FNN makes each prediction from a static 3-day snapshot and then resets its
+state entirely. It cannot accumulate the context of a sustained volatility
+cluster building over days or weeks. Without persistent memory,
+\emph{``high volatility today $\Rightarrow$ high volatility tomorrow''}
+is not learnable.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Summary}
+
+\begin{table}[H]
+  \centering
+  \caption{Best FNN configuration and rationale.}
+  \label{tab:fnn_best}
+  \begin{tabular}{lll}
+    \toprule
+    Parameter & Choice & Rationale \\
+    \midrule
+    Activation    & ReLU              & Best test MAE; stable gradient propagation \\
+    Initialisation & He normal        & Stable convergence; variance-preserving for ReLU \\
+    Optimizer     & SGD $\mu=0.95$    & Fastest convergence; best generalisation \\
+    Lag window    & $L=3$             & Beyond 3 days, distant lags add noise \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+With this configuration the FNN achieves \textbf{MAE~$=0.579$} on the test set
+versus \textbf{0.638} for the linear baseline --- a \textbf{9\,\% improvement}
+driven entirely by the non-linear activation resolving symmetry blindness.
+
+Two structural limitations, demonstrated empirically, motivate the architectures
+developed in the following sections:
+\begin{itemize}
+  \item \textbf{Order blindness}: the FNN has no positional encoding; a
+        recurrent architecture is needed to make temporal ordering a structural
+        property rather than an optimisation artefact.
+  \item \textbf{Regime blindness}: without a persistent hidden state, the model
+        cannot exploit volatility clustering; an RNN is needed to carry
+        context across time steps.
+\end{itemize}

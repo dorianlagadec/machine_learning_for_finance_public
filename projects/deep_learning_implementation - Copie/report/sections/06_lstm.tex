@@ -1,0 +1,103 @@
+\section{Conclusion}
+\label{sec:conclusion}
+
+\subsection{Cross-Model Comparison}
+
+Table~\ref{tab:final_comparison} summarises the performance of all models on
+the full test set using MAE as the primary metric. Each model is evaluated on the
+same held-out test period; the improvement column is computed relative to the
+raw linear regression baseline (MAE~$= 0.638$).
+
+\begin{table}[H]
+  \centering
+  \caption{Cross-model comparison (MAE on test set, standardised target).
+    Lower is better.}
+  \label{tab:final_comparison}
+  \begin{tabular}{lrr}
+    \toprule
+    Model & MAE (full) & vs.\ linear baseline \\
+    \midrule
+    Linear Regression (raw lags)                    & 0.638  & --- \\
+    Linear Regression (feature-engineered)          & 0.598  & $-6\,\%$ \\
+    GARCH(1,1)$^\dagger$                            & 0.00583 & --- \\
+    FNN (ReLU, $L=3$, SGD $\mu=0.95$)              & 0.579  & $-9\,\%$ \\
+    RNN ($T=20$, $H=64$, Adam)                     & 0.502  & $-21\,\%$ \\
+    \bottomrule
+    \multicolumn{3}{l}{\footnotesize
+      $^\dagger$ GARCH is estimated on unscaled returns; its MAE is not
+      directly comparable to the other four models.}
+  \end{tabular}
+\end{table}
+
+\noindent Every neural network model outperforms the linear baseline, and the
+gap widens as architectural complexity increases. The RNN, which explicitly
+models the temporal ordering of lags, achieves the largest gain: a
+\textbf{21\,\% reduction in MAE} relative to the raw linear regression, or
+\textbf{13\,\%} relative to the best FNN configuration.
+
+\subsection{Key Findings}
+
+Three themes emerge consistently across all architectures.
+
+\paragraph{Non-linearity matters, but is not enough.}
+Moving from linear regression to an FNN reduces MAE from~$0.638$ to~$0.579$
+($-9\,\%$). The ReLU activation allows the network to learn the approximate
+symmetry $f(x) \approx f(-x)$ required for volatility prediction --- a
+representation that is fundamentally unavailable to a linear model with signed
+inputs. Feature engineering (squared lags) partially compensates for this
+limitation without introducing learned non-linearity, bringing the linear
+baseline to~$0.598$. However, neither linear nor FNN models exploit the
+\emph{ordering} of lags: their performance is largely insensitive to input
+permutation.
+
+\paragraph{Temporal structure is a genuine source of signal.}
+The RNN's 13\,\% improvement over the FNN demonstrates that the sequential
+ordering of past returns carries predictive information beyond their set-level
+statistics. The model learns to assign greater sensitivity to recent lags and
+to accumulate context across the input window --- a capability unavailable to a
+flat feature-vector architecture. Yet the gain is partially undermined by
+vanishing gradients: output sensitivity collapses within approximately one
+recurrence step, limiting the effective memory despite a 20-lag input window.
+
+\paragraph{Regime blindness is the dominant unsolved challenge.}
+Across all architectures, crisis-period MAE is \textbf{2.5--4$\times$ higher}
+than calm-period MAE. During stress episodes (dot-com crash, 2008 GFC, COVID
+shock), every model systematically under-predicts volatility because the
+training distribution offers few examples of extreme moves. The ARCH signal
+that makes forecasting tractable during calm periods breaks down precisely when
+forecasting accuracy matters most --- during crises. This gap is not closed by
+switching from linear to non-linear models, nor by introducing temporal memory:
+it reflects a fundamental data scarcity problem that cannot be resolved by
+architectural choices alone.
+
+\subsection{Limitations and Future Work}
+
+The results presented in this report point to several natural extensions.
+
+\paragraph{Gated recurrent architectures.}
+The vanilla RNN's vanishing-gradient problem is directly addressed by the Long
+Short-Term Memory (LSTM) and Gated Recurrent Unit (GRU) architectures, which
+introduce multiplicative gating mechanisms that decouple the gradient highway
+from the output projection. Based on the grid search results (Section~\ref{sec:rnn}),
+the ceiling imposed by architecture rather than hyperparameters suggests that a
+gated model is the single most promising next step.
+
+\paragraph{Regime-aware modelling.}
+All models in this study treat calm and crisis observations as draws from the
+same distribution. A natural extension is to condition the model on an estimated
+regime state --- either via an explicit regime-switching layer, a Hidden Markov
+Model that labels observations before training, or a threshold variable (e.g.\
+the VIX index) provided as an additional input feature.
+
+\paragraph{Multivariate inputs.}
+The forecasting task here relies exclusively on lagged log-returns of a single
+asset. Incorporating cross-asset information (implied volatility indices, credit
+spreads, macro factors) could provide leading indicators of regime transitions
+that are absent from the univariate input.
+
+\paragraph{Attention mechanisms.}
+Transformer-based architectures replace recurrence with self-attention, allowing
+the model to attend directly to any lag in the input window without the gradient
+attenuation that limits RNNs. This could address the long-range dependency
+problem identified in the vanishing-gradient analysis while remaining fully
+parallelisable during training.

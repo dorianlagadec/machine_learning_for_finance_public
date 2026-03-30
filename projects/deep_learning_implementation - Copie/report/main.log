@@ -1,0 +1,818 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.28 (MiKTeX 25.12) (preloaded format=pdflatex 2026.3.9)  30 MAR 2026 21:11
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./main.tex
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/base\article.cls
+Document Class: article 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/base\size12.clo
+File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count275
+\c@section=\count276
+\c@subsection=\count277
+\c@subsubsection=\count278
+\c@paragraph=\count279
+\c@subparagraph=\count280
+\c@figure=\count281
+\c@table=\count282
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen148
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2024/02/08 v1.3d Input encoding file
+\inpenc@prehook=\toks17
+\inpenc@posthook=\toks18
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2020/01/02 v5.9 Page Geometry
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks19
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+))
+\Gm@cnth=\count283
+\Gm@cntv=\count284
+\c@Gm@tempcnt=\count285
+\Gm@bindingoffset=\dimen149
+\Gm@wd@mp=\dimen150
+\Gm@odd@mp=\dimen151
+\Gm@even@mp=\dimen152
+\Gm@layoutwidth=\dimen153
+\Gm@layoutheight=\dimen154
+\Gm@layouthoffset=\dimen155
+\Gm@layoutvoffset=\dimen156
+\Gm@dimlist=\toks20
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsmath.sty
+Package: amsmath 2025/07/09 v2.17z AMS math features
+\@mathmargin=\skip51
+
+For additional information on amsmath, use the `?' option.
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amstext.sty
+Package: amstext 2024/11/17 v2.01 AMS text
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks21
+\ex@=\dimen157
+))
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen158
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsmath\amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count286
+LaTeX Info: Redefining \frac on input line 233.
+\uproot@=\count287
+\leftroot@=\count288
+LaTeX Info: Redefining \overline on input line 398.
+LaTeX Info: Redefining \colon on input line 409.
+\classnum@=\count289
+\DOTSCASE@=\count290
+LaTeX Info: Redefining \ldots on input line 495.
+LaTeX Info: Redefining \dots on input line 498.
+LaTeX Info: Redefining \cdots on input line 619.
+\Mathstrutbox@=\box53
+\strutbox@=\box54
+LaTeX Info: Redefining \big on input line 721.
+LaTeX Info: Redefining \Big on input line 722.
+LaTeX Info: Redefining \bigg on input line 723.
+LaTeX Info: Redefining \Bigg on input line 724.
+\big@size=\dimen159
+LaTeX Font Info:    Redeclaring font encoding OML on input line 742.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 743.
+\macc@depth=\count291
+LaTeX Info: Redefining \bmod on input line 904.
+LaTeX Info: Redefining \pmod on input line 909.
+LaTeX Info: Redefining \smash on input line 939.
+LaTeX Info: Redefining \relbar on input line 969.
+LaTeX Info: Redefining \Relbar on input line 970.
+\c@MaxMatrixCols=\count292
+\dotsspace@=\muskip17
+\c@parentequation=\count293
+\dspbrk@lvl=\count294
+\tag@help=\toks22
+\row@=\count295
+\column@=\count296
+\maxfields@=\count297
+\andhelp@=\toks23
+\eqnshift@=\dimen160
+\alignsep@=\dimen161
+\tagshift@=\dimen162
+\tagwidth@=\dimen163
+\totwidth@=\dimen164
+\lineht@=\dimen165
+\@envbody=\toks24
+\multlinegap=\skip52
+\multlinetaggap=\skip53
+\mathdisplay@stack=\toks25
+LaTeX Info: Redefining \[ on input line 2950.
+LaTeX Info: Redefining \] on input line 2951.
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amssymb.sty
+Package: amssymb 2013/01/14 v3.01 AMS font symbols
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\amsfonts.sty
+Package: amsfonts 2013/01/14 v3.01 Basic AMSFonts support
+\symAMSa=\mathgroup4
+\symAMSb=\mathgroup5
+LaTeX Font Info:    Redeclaring math symbol \hbar on input line 98.
+LaTeX Font Info:    Overwriting math alphabet `\mathfrak' in version `bold'
+(Font)                  U/euf/m/n --> U/euf/b/n on input line 106.
+)) (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.st
+y
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen166
+\Gin@req@width=\dimen167
+) (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count298
+\float@exts=\toks26
+\float@box=\box55
+\@float@everytoks=\toks27
+\@floatcapt=\box56
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen168
+\captionmargin=\dimen169
+\caption@leftmargin=\dimen170
+\caption@rightmargin=\dimen171
+\caption@width=\dimen172
+\caption@indent=\dimen173
+\caption@parindent=\dimen174
+\caption@hangindent=\dimen175
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count299
+\c@continuedfloat=\count300
+Package caption Info: float package is loaded.
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/caption\subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count301
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count302
+) (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/booktabs\booktabs.sty
+Package: booktabs 2020/01/12 v1.61803398 Publication quality tables
+\heavyrulewidth=\dimen176
+\lightrulewidth=\dimen177
+\cmidrulewidth=\dimen178
+\belowrulesep=\dimen179
+\belowbottomsep=\dimen180
+\aboverulesep=\dimen181
+\abovetopsep=\dimen182
+\cmidrulesep=\dimen183
+\cmidrulekern=\dimen184
+\defaultaddspace=\dimen185
+\@cmidla=\count303
+\@cmidlb=\count304
+\@aboverulesep=\dimen186
+\@belowrulesep=\dimen187
+\@thisruleclass=\count305
+\@lastruleclass=\count306
+\@thisrulewidth=\dimen188
+) (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen189
+\ar@mcellbox=\box57
+\extrarowheight=\dimen190
+\NC@list=\toks28
+\extratabsurround=\skip54
+\backup@length=\skip55
+\ar@cellbox=\box58
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+Package: hyperref 2025-07-12 v7.01o Hypertext links for LaTeX
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+))
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+Package: nameref 2025-06-21 v2.57 Cross-referencing by name of section
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count307
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count308
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
+ty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
+)
+)
+\@linkdim=\dimen191
+\Hy@linkcounter=\count309
+\Hy@pagecounter=\count310
+ (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+File: pd1enc.def 2025-07-12 v7.01o Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count311
+ (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
+File: puenc.def 2025-07-12 v7.01o Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 4066.
+Package hyperref Info: Hyper figures OFF on input line 4195.
+Package hyperref Info: Link nesting OFF on input line 4200.
+Package hyperref Info: Hyper index ON on input line 4203.
+Package hyperref Info: Plain pages OFF on input line 4210.
+Package hyperref Info: Backreferencing OFF on input line 4215.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4462.
+\c@Hy@tempcnt=\count312
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+\Urlmuskip=\muskip18
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4801.
+\XeTeXLinkMargin=\dimen192
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count313
+\Field@Width=\dimen193
+\Fld@charsize=\dimen194
+Package hyperref Info: Hyper figures OFF on input line 6078.
+Package hyperref Info: Link nesting OFF on input line 6083.
+Package hyperref Info: Hyper index ON on input line 6086.
+Package hyperref Info: backreferencing OFF on input line 6093.
+Package hyperref Info: Link coloring ON on input line 6096.
+Package hyperref Info: Link coloring with OCG OFF on input line 6103.
+Package hyperref Info: PDF/A mode OFF on input line 6108.
+\Hy@abspage=\count314
+\c@Item=\count315
+\c@Hfootnote=\count316
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+File: hpdftex.def 2025-07-12 v7.01o Hyperref driver for pdfTeX
+\Fld@listcount=\count317
+\c@bookmark@seq@number=\count318
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
+Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+84.
+)
+\Hy@SectionHShift=\skip56
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/natbib\natbib.sty
+Package: natbib 2010/09/13 8.31b (PWD, AO)
+\bibhang=\skip57
+\bibsep=\skip58
+LaTeX Info: Redefining \cite on input line 694.
+\c@NAT@ctr=\count319
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+) (C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/units\nicefrac.sty
+Package: nicefrac 1998/08/04 v0.9b Nice fractions
+\L@UnitsRaiseDisplaystyle=\skip59
+\L@UnitsRaiseTextstyle=\skip60
+\L@UnitsRaiseScriptstyle=\skip61
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+))
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def
+File: l3backend-pdftex.def 2025-10-09 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count320
+) (main.aux)
+\openout1 = `main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 53.
+LaTeX Font Info:    ... okay on input line 53.
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(71.13188pt, 455.24411pt, 71.13188pt)
+* v-part:(T,H,B)=(71.13188pt, 702.78308pt, 71.13188pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=455.24411pt
+* \textheight=702.78308pt
+* \oddsidemargin=-1.1381pt
+* \evensidemargin=-1.1381pt
+* \topmargin=-38.1381pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=35.0pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count321
+\scratchdimen=\dimen195
+\scratchbox=\box59
+\nofMPsegments=\count322
+\nofMParguments=\count323
+\everyMPshowfont=\toks29
+\MPscratchCnt=\count324
+\MPscratchDim=\dimen196
+\MPnumerator=\count325
+\makeMPintoPDFobject=\count326
+\everyMPtoPDFconversion=\toks30
+)
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+Package hyperref Info: Link coloring ON on input line 53.
+ (main.out) (main.out)
+\@outlinefile=\write3
+\openout3 = `main.out'.
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 56.
+
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsa.fd
+File: umsa.fd 2013/01/14 v3.01 AMS symbols A
+)
+LaTeX Font Info:    Trying to load font information for U+msb on input line 56.
+
+
+(C:\Users\cleme\AppData\Local\Programs\MiKTeX\tex/latex/amsfonts\umsb.fd
+File: umsb.fd 2013/01/14 v3.01 AMS symbols B
+)
+(main.toc [1
+
+{C:/Users/cleme/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}])
+\tf@toc=\write4
+\openout4 = `main.toc'.
+
+[2] (sections/01_introduction.tex [3]) [4] (sections/02_data.tex
+<figures/figure_21.png, id=367, 1003.8303pt x 281.853pt>
+File: figures/figure_21.png Graphic file (type png)
+<use figures/figure_21.png>
+Package pdftex.def Info: figures/figure_21.png  used on input line 55.
+(pdftex.def)             Requested size: 455.24411pt x 127.82184pt.
+ [5
+
+]
+<figures/figure_22.png, id=376, 1003.8303pt x 281.853pt>
+File: figures/figure_22.png Graphic file (type png)
+<use figures/figure_22.png>
+Package pdftex.def Info: figures/figure_22.png  used on input line 70.
+(pdftex.def)             Requested size: 455.24411pt x 127.82184pt.
+<figures/figure_23.png, id=377, 1003.8303pt x 298.4751pt>
+File: figures/figure_23.png Graphic file (type png)
+<use figures/figure_23.png>
+Package pdftex.def Info: figures/figure_23.png  used on input line 100.
+(pdftex.def)             Requested size: 455.24411pt x 135.36005pt.
+ [6 <./figures/figure_21.png> <./figures/figure_22.png>]
+<figures/figure_24.png, id=387, 569.4876pt x 425.6703pt>
+File: figures/figure_24.png Graphic file (type png)
+<use figures/figure_24.png>
+Package pdftex.def Info: figures/figure_24.png  used on input line 119.
+(pdftex.def)             Requested size: 455.24411pt x 340.28339pt.
+ [7 <./figures/figure_23.png>])
+[8 <./figures/figure_24.png>] (sections/03_linear_regression.tex [9
+
+]
+<figures/figure_31.png, id=410, 1003.8303pt x 281.853pt>
+File: figures/figure_31.png Graphic file (type png)
+<use figures/figure_31.png>
+Package pdftex.def Info: figures/figure_31.png  used on input line 74.
+(pdftex.def)             Requested size: 455.24411pt x 127.82184pt.
+ [10 <./figures/figure_31.png>] [11]) [12] (sections/04_fnn.tex
+<figures/figure_41.png, id=438, 714.7503pt x 354.123pt>
+File: figures/figure_41.png Graphic file (type png)
+<use figures/figure_41.png>
+Package pdftex.def Info: figures/figure_41.png  used on input line 65.
+(pdftex.def)             Requested size: 455.24411pt x 225.55724pt.
+ [13
+
+]
+<figures/figure_42.png, id=448, 714.7503pt x 354.123pt>
+File: figures/figure_42.png Graphic file (type png)
+<use figures/figure_42.png>
+Package pdftex.def Info: figures/figure_42.png  used on input line 97.
+(pdftex.def)             Requested size: 455.24411pt x 225.55724pt.
+ [14 <./figures/figure_41.png>]
+<figures/figure_43.png, id=455, 787.0203pt x 354.123pt>
+File: figures/figure_43.png Graphic file (type png)
+<use figures/figure_43.png>
+Package pdftex.def Info: figures/figure_43.png  used on input line 140.
+(pdftex.def)             Requested size: 455.24411pt x 204.84032pt.
+ [15 <./figures/figure_42.png>]
+Overfull \hbox (3.64725pt too wide) in paragraph at lines 152--154
+[]$\OML/cmm/m/it/12  \OT1/cmr/m/n/12 = 10[]$\T1/cmr/m/n/12 : early over-shoot 
+fol-lowed by con-ver-gence to a worse min-i-mum (MAE $\OT1/cmr/m/n/12 0\OML/cmm
+/m/it/12 :\OT1/cmr/m/n/12 618$\T1/cmr/m/n/12 ). 
+ []
+
+<figures/figure_44.png, id=463, 570.933pt x 281.853pt>
+File: figures/figure_44.png Graphic file (type png)
+<use figures/figure_44.png>
+Package pdftex.def Info: figures/figure_44.png  used on input line 166.
+(pdftex.def)             Requested size: 455.24411pt x 224.74728pt.
+[16 <./figures/figure_43.png>]
+<figures/figure_45.png, id=471, 1004.553pt x 724.8681pt>
+File: figures/figure_45.png Graphic file (type png)
+<use figures/figure_45.png>
+Package pdftex.def Info: figures/figure_45.png  used on input line 201.
+(pdftex.def)             Requested size: 455.24411pt x 328.4993pt.
+ [17 <./figures/figure_44.png>]
+<figures/figure_49.png, id=480, 642.4803pt x 281.853pt>
+File: figures/figure_49.png Graphic file (type png)
+<use figures/figure_49.png>
+Package pdftex.def Info: figures/figure_49.png  used on input line 223.
+(pdftex.def)             Requested size: 455.24411pt x 199.71275pt.
+ [18 <./figures/figure_45.png>]
+<figures/figure_46.png, id=488, 1079.7138pt x 879.5259pt>
+File: figures/figure_46.png Graphic file (type png)
+<use figures/figure_46.png>
+Package pdftex.def Info: figures/figure_46.png  used on input line 271.
+(pdftex.def)             Requested size: 455.24411pt x 370.83435pt.
+ [19 <./figures/figure_49.png>]
+<figures/figure_47.png, id=497, 1076.1003pt x 879.5259pt>
+File: figures/figure_47.png Graphic file (type png)
+<use figures/figure_47.png>
+Package pdftex.def Info: figures/figure_47.png  used on input line 282.
+(pdftex.def)             Requested size: 455.24411pt x 372.08246pt.
+ [20 <./figures/figure_46.png>]
+<figures/figure_48.png, id=504, 1004.553pt x 357.7365pt>
+File: figures/figure_48.png Graphic file (type png)
+<use figures/figure_48.png>
+Package pdftex.def Info: figures/figure_48.png  used on input line 302.
+(pdftex.def)             Requested size: 455.24411pt x 162.12077pt.
+
+[21 <./figures/figure_47.png>]
+<figures/figure_412.png, id=511, 1076.1003pt x 286.1892pt>
+File: figures/figure_412.png Graphic file (type png)
+<use figures/figure_412.png>
+Package pdftex.def Info: figures/figure_412.png  used on input line 322.
+(pdftex.def)             Requested size: 455.24411pt x 121.072pt.
+ [22 <./figures/figure_48.png> <./figures/figure_412.png>]
+<figures/figure_410.png, id=520, 714.7503pt x 354.123pt>
+File: figures/figure_410.png Graphic file (type png)
+<use figures/figure_410.png>
+Package pdftex.def Info: figures/figure_410.png  used on input line 351.
+(pdftex.def)             Requested size: 455.24411pt x 225.55724pt.
+<figures/figure_411.png, id=521, 1003.8303pt x 357.7365pt>
+File: figures/figure_411.png Graphic file (type png)
+<use figures/figure_411.png>
+Package pdftex.def Info: figures/figure_411.png  used on input line 388.
+(pdftex.def)             Requested size: 455.24411pt x 162.23541pt.
+ [23 <./figures/figure_410.png>] [24 <./figures/figure_411.png>])
+[25] (sections/05_rnn.tex [26
+
+]
+<figures/figure_51.png, id=548, 1003.8303pt x 281.853pt>
+File: figures/figure_51.png Graphic file (type png)
+<use figures/figure_51.png>
+Package pdftex.def Info: figures/figure_51.png  used on input line 121.
+(pdftex.def)             Requested size: 455.24411pt x 127.82184pt.
+<figures/figure_52.png, id=549, 642.4803pt x 281.853pt>
+File: figures/figure_52.png Graphic file (type png)
+<use figures/figure_52.png>
+Package pdftex.def Info: figures/figure_52.png  used on input line 136.
+(pdftex.def)             Requested size: 455.24411pt x 199.71275pt.
+ [27 <./figures/figure_51.png>]
+<figures/figure_53.png, id=560, 714.7503pt x 281.853pt>
+File: figures/figure_53.png Graphic file (type png)
+<use figures/figure_53.png>
+Package pdftex.def Info: figures/figure_53.png  used on input line 152.
+(pdftex.def)             Requested size: 455.24411pt x 179.52515pt.
+<figures/figure_54.png, id=561, 1003.8303pt x 853.5087pt>
+File: figures/figure_54.png Graphic file (type png)
+<use figures/figure_54.png>
+Package pdftex.def Info: figures/figure_54.png  used on input line 169.
+(pdftex.def)             Requested size: 455.24411pt x 387.07077pt.
+ [28 <./figures/figure_52.png> <./figures/figure_53.png>] [29 <./figures/figure
+_54.png>]
+<figures/figure_55.png, id=579, 1003.1076pt x 286.1892pt>
+File: figures/figure_55.png Graphic file (type png)
+<use figures/figure_55.png>
+Package pdftex.def Info: figures/figure_55.png  used on input line 211.
+(pdftex.def)             Requested size: 455.24411pt x 129.88002pt.
+
+Underfull \hbox (badness 3199) in paragraph at lines 214--214
+[]\T1/cmr/m/n/12 Figure 22: |Weight dis-tri-bu-tions be-fore train-ing. $\OML/c
+mm/m/it/12 W[]$ \T1/cmr/m/n/12 (input$\OMS/cmsy/m/n/12 !$\T1/cmr/m/n/12 hidden)
+, $\OML/cmm/m/it/12 W[]$
+ []
+
+<figures/figure_56.png, id=580, 1003.8303pt x 286.1892pt>
+File: figures/figure_56.png Graphic file (type png)
+<use figures/figure_56.png>
+Package pdftex.def Info: figures/figure_56.png  used on input line 220.
+(pdftex.def)             Requested size: 455.24411pt x 129.78831pt.
+<figures/figure_57.png, id=581, 711.1368pt x 286.9119pt>
+File: figures/figure_57.png Graphic file (type png)
+<use figures/figure_57.png>
+Package pdftex.def Info: figures/figure_57.png  used on input line 238.
+(pdftex.def)             Requested size: 455.24411pt x 183.67113pt.
+[30 <./figures/figure_55.png> <./figures/figure_56.png>]
+<figures/figure_58.png, id=590, 711.1368pt x 286.9119pt>
+File: figures/figure_58.png Graphic file (type png)
+<use figures/figure_58.png>
+Package pdftex.def Info: figures/figure_58.png  used on input line 247.
+(pdftex.def)             Requested size: 455.24411pt x 183.67113pt.
+<figures/figure_59.png, id=591, 859.2903pt x 286.1892pt>
+File: figures/figure_59.png Graphic file (type png)
+<use figures/figure_59.png>
+Package pdftex.def Info: figures/figure_59.png  used on input line 268.
+(pdftex.def)             Requested size: 455.24411pt x 151.6184pt.
+ [31 <./figures/figure_57.png> <./figures/figure_58.png>]
+<figures/figure_510.png, id=601, 859.2903pt x 286.1892pt>
+File: figures/figure_510.png Graphic file (type png)
+<use figures/figure_510.png>
+Package pdftex.def Info: figures/figure_510.png  used on input line 278.
+(pdftex.def)             Requested size: 455.24411pt x 151.6184pt.
+<figures/figure_511.png, id=602, 1002.3849pt x 852.786pt>
+File: figures/figure_511.png Graphic file (type png)
+<use figures/figure_511.png>
+Package pdftex.def Info: figures/figure_511.png  used on input line 299.
+(pdftex.def)             Requested size: 455.24411pt x 387.30255pt.
+ [32 <./figures/figure_59.png> <./figures/figure_510.png>]
+<figures/figure_512.png, id=611, 1003.8303pt x 357.7365pt>
+File: figures/figure_512.png Graphic file (type png)
+<use figures/figure_512.png>
+Package pdftex.def Info: figures/figure_512.png  used on input line 319.
+(pdftex.def)             Requested size: 455.24411pt x 162.23541pt.
+ [33 <./figures/figure_511.png>]
+<figures/figure_513.png, id=618, 1075.3776pt x 534.798pt>
+File: figures/figure_513.png Graphic file (type png)
+<use figures/figure_513.png>
+Package pdftex.def Info: figures/figure_513.png  used on input line 344.
+(pdftex.def)             Requested size: 455.24411pt x 226.40074pt.
+ [34 <./figures/figure_512.png>]
+<figures/figure_514.png, id=625, 1075.3776pt x 534.798pt>
+File: figures/figure_514.png Graphic file (type png)
+<use figures/figure_514.png>
+Package pdftex.def Info: figures/figure_514.png  used on input line 354.
+(pdftex.def)             Requested size: 455.24411pt x 226.40074pt.
+<figures/figure_515.png, id=626, 517.4532pt x 180.675pt>
+File: figures/figure_515.png Graphic file (type png)
+<use figures/figure_515.png>
+Package pdftex.def Info: figures/figure_515.png  used on input line 363.
+(pdftex.def)             Requested size: 455.24411pt x 158.95587pt.
+
+[35 <./figures/figure_513.png> <./figures/figure_514.png>]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 386.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 386.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 386.
+
+<figures/figure_516.png, id=635, 1003.8303pt x 286.1892pt>
+File: figures/figure_516.png Graphic file (type png)
+<use figures/figure_516.png>
+Package pdftex.def Info: figures/figure_516.png  used on input line 395.
+(pdftex.def)             Requested size: 455.24411pt x 129.78831pt.
+[36 <./figures/figure_515.png> <./figures/figure_516.png>]
+<figures/figure_517.png, id=644, 859.2903pt x 286.1892pt>
+File: figures/figure_517.png Graphic file (type png)
+<use figures/figure_517.png>
+Package pdftex.def Info: figures/figure_517.png  used on input line 419.
+(pdftex.def)             Requested size: 455.24411pt x 151.6184pt.
+<figures/figure_518.png, id=645, 859.2903pt x 286.1892pt>
+File: figures/figure_518.png Graphic file (type png)
+<use figures/figure_518.png>
+Package pdftex.def Info: figures/figure_518.png  used on input line 441.
+(pdftex.def)             Requested size: 455.24411pt x 151.6184pt.
+ [37 <./figures/figure_517.png> <./figures/figure_518.png>]
+<figures/figure_519.png, id=655, 1293.633pt x 286.1892pt>
+File: figures/figure_519.png Graphic file (type png)
+<use figures/figure_519.png>
+Package pdftex.def Info: figures/figure_519.png  used on input line 478.
+(pdftex.def)             Requested size: 455.24411pt x 100.71356pt.
+ [38 <./figures/figure_519.png>]
+Overfull \hbox (15.13257pt too wide) in paragraph at lines 567--578
+ [][] 
+ []
+
+[39]
+Overfull \hbox (27.75117pt too wide) in paragraph at lines 599--605
+[]\T1/cmr/bx/n/12 Architecture, not hy-per-pa-ram-e-ters, is the bind-ing con-s
+traint. \T1/cmr/m/n/12 A 48-configuration
+ []
+
+) [40] (sections/06_lstm.tex
+Overfull \hbox (20.04657pt too wide) in paragraph at lines 16--30
+ [][] 
+ []
+
+[41
+
+]) [42] (main.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2025-12-24>
+ ***********
+
+
+Package rerunfilecheck Warning: File `main.out' has changed.
+(rerunfilecheck)                Rerun to get outlines right
+(rerunfilecheck)                or use package `bookmark'.
+
+Package rerunfilecheck Info: Checksums for `main.out':
+(rerunfilecheck)             Before: A100BE79BEF5AB58EEA28E1E2BA68C48;10585
+(rerunfilecheck)             After:  179DC414A98AFD6C5D4CE8373DF11246;10521.
+ ) 
+Here is how much of TeX's memory you used:
+ 13550 strings out of 467871
+ 215585 string characters out of 5418377
+ 640953 words of memory out of 5000000
+ 42038 multiletter control sequences out of 15000+600000
+ 649587 words of font info for 99 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 75i,11n,79p,537b,522s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\cleme\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm
+1000.pk> <C:\Users\cleme\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
+0\ecrm0800.pk> <C:\Users\cleme\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\tcrm1200.pk> <C:\Users\cleme\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\ectt1200.pk> <C:\Users\cleme\AppData\Local\MiKTeX\fonts/pk/ljfour
+/jknappen/ec/dpi600\ecti1200.pk> <C:\Users\cleme\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\cleme\AppData\Local\MiKTeX\fon
+ts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\Users\cleme\AppData\Local\MiKT
+eX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\cleme\AppData\Loca
+l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1728.pk> <C:\Users\cleme\AppDat
+a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1095.pk> <C:\Users\cleme\
+AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1440.pk> <C:\Users\
+cleme\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2074.pk><C:/U
+sers/cleme/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmbx12.
+pfb><C:/Users/cleme/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/c
+m/cmex10.pfb><C:/Users/cleme/AppData/Local/Programs/MiKTeX/fonts/type1/public/a
+msfonts/cm/cmmi12.pfb><C:/Users/cleme/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/cm/cmmi6.pfb><C:/Users/cleme/AppData/Local/Programs/MiKTeX/fon
+ts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Users/cleme/AppData/Local/Programs/Mi
+KTeX/fonts/type1/public/amsfonts/cm/cmr10.pfb><C:/Users/cleme/AppData/Local/Pro
+grams/MiKTeX/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Users/cleme/AppData/L
+ocal/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr6.pfb><C:/Users/cleme/Ap
+pData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Users/c
+leme/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy10.pfb><C
+:/Users/cleme/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/cmsy
+6.pfb><C:/Users/cleme/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts
+/cm/cmsy7.pfb><C:/Users/cleme/AppData/Local/Programs/MiKTeX/fonts/type1/public/
+amsfonts/cm/cmsy8.pfb><C:/Users/cleme/AppData/Local/Programs/MiKTeX/fonts/type1
+/public/amsfonts/symbols/msbm10.pfb>
+Output written on main.pdf (42 pages, 2864424 bytes).
+PDF statistics:
+ 1241 PDF objects out of 1440 (max. 8388607)
+ 199 named destinations out of 1000 (max. 500000)
+ 693 words of extra memory for PDF output out of 10000 (max. 10000000)
+

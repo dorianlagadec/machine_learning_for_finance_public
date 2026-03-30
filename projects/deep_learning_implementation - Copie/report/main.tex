@@ -1,0 +1,77 @@
+\documentclass[12pt,a4paper]{article}
+
+% ── Encoding & fonts ──────────────────────────────────────────────────────────
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+
+% ── Page layout ───────────────────────────────────────────────────────────────
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry}
+
+% ── Math ──────────────────────────────────────────────────────────────────────
+\usepackage{amsmath}
+\usepackage{amssymb}
+
+% ── Figures & tables ──────────────────────────────────────────────────────────
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{array}
+
+% ── References & links ────────────────────────────────────────────────────────
+\usepackage[colorlinks=true, linkcolor=blue, citecolor=blue, urlcolor=blue]{hyperref}
+\usepackage[numbers,sort&compress]{natbib}
+
+% ── Misc ──────────────────────────────────────────────────────────────────────
+\usepackage{xcolor}
+\usepackage{nicefrac}
+
+% ── Helpers ───────────────────────────────────────────────────────────────────
+% Placeholder box for missing figures
+\newcommand{\figplaceholder}[2]{%
+  \begin{figure}[H]
+    \centering
+    \fcolorbox{gray!60}{gray!10}{\parbox{0.85\textwidth}{\centering\vspace{1.5cm}
+      \textcolor{gray}{\textbf{[Figure placeholder]}\\#1}\vspace{1.5cm}}}
+    \caption{#2}
+  \end{figure}%
+}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\title{\textbf{Absolute Return Forecasting:\\
+       From Linear Models to Recurrent Neural Networks}}
+
+\author{
+  Edouard Blanc \quad Cl\'ement Dardare \quad Julien Simeoni \\[4pt]
+  \small Machine Learning For Finance
+}
+
+\date{\today}
+% ─────────────────────────────────────────────────────────────────────────────
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ── Sections ──────────────────────────────────────────────────────────────────
+\input{sections/01_introduction}
+\clearpage
+\input{sections/02_data}
+\clearpage
+\input{sections/03_linear_regression}
+\clearpage
+\input{sections/04_fnn}
+\clearpage
+\input{sections/05_rnn}
+\clearpage
+\input{sections/06_lstm}
+
+% ── Bibliography ──────────────────────────────────────────────────────────────
+\bibliographystyle{plainnat}
+% \bibliography{references}   % uncomment when references.bib is added
+
+\end{document}

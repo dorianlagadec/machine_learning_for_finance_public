@@ -1,0 +1,77 @@
+\section{Introduction}
+\label{sec:introduction}
+
+\subsection{Motivation}
+
+Accurately forecasting the magnitude of future asset returns is a central problem in
+quantitative finance. While the \emph{direction} of price changes is notoriously
+difficult to predict, the \emph{amplitude} of those changes (often proxied by realized
+volatility) exhibits strong and exploitable serial dependence. This phenomenon is
+characterised by \emph{volatility clustering}: large
+price moves tend to be followed by large moves, and calm periods persist until a new
+shock arrives.
+
+Predicting the absolute return of the S\&P~500 index therefore serves a dual purpose: it
+is both a well-posed statistical problem with a meaningful signal in the data and a
+practically relevant task for risk management, option pricing, and portfolio construction.
+
+\subsection{Objective}
+
+This project empirically compares a progression of models of increasing expressive power
+applied to the same forecasting task:
+
+\begin{enumerate}
+  \item \textbf{Linear Regression} --- a transparent but structurally constrained baseline.
+  \item \textbf{GARCH(1,1)} --- the industry-standard parametric volatility model.
+  \item \textbf{Feedforward Neural Network (FNN)} --- a non-linear model that treats the
+        input as a flat, orderless feature vector.
+  \item \textbf{Recurrent Neural Network (RNN)} --- a sequential model that can exploit
+        the temporal ordering of lags.
+\end{enumerate}
+
+Rather than searching for the best possible model, the goal is to \emph{understand the
+limitations of each architecture} and to show how each successive model overcomes
+(some of) the shortcomings of its predecessor.
+
+\subsection{Dataset}
+
+The dataset is built from the daily log-returns of the SPY ETF (S\&P~500 tracker),
+downloaded via the \texttt{yfinance} library. The sample spans \textbf{February 1993 to
+March 2026}, yielding \textbf{8\,343 daily observations}.
+
+The forecasting problem is formulated as a sliding-window regression:
+\begin{itemize}
+  \item \textbf{Input} $X_t$: the $L$ most recent daily log-returns
+        $(r_{t-1}, r_{t-2}, \ldots, r_{t-L})$, with $L \geq 10$.
+  \item \textbf{Target} $y_t$: the realized absolute return on day $t$, computed as the
+        rolling standard deviation of returns over a short window (a proxy for
+        next-day volatility).
+\end{itemize}
+
+\subsection{Evaluation}
+
+Models are evaluated using three metrics, computed on a held-out test set:
+
+\begin{itemize}
+  \item \textbf{MAE} (Mean Absolute Error) --- primary metric for cross-model comparison.
+  \item \textbf{RMSE} (Root Mean Squared Error) --- penalises large errors more heavily.
+  \item \textbf{QLIKE} (Quasi-Likelihood loss) --- a standard volatility-forecasting loss
+        that penalises systematic under-prediction.
+\end{itemize}
+
+Because market conditions vary dramatically, all models are also evaluated separately on
+two \textbf{market regimes} identified from the data:
+\begin{itemize}
+  \item \textbf{Calm regime} ($\approx$90\% of observations): low, stable volatility.
+  \item \textbf{Crisis regime} ($\approx$10\% of observations): sharp spikes corresponding
+        to the dot-com crash, the 2008 Global Financial Crisis, and the COVID shock.
+\end{itemize}
+
+\subsection{Paper Structure}
+
+Section~\ref{sec:data} describes the dataset and its key statistical properties.
+Section~\ref{sec:linreg} presents the linear regression and GARCH baselines.
+Sections~\ref{sec:fnn} and~\ref{sec:rnn} introduce the feedforward and recurrent
+neural network architectures respectively.
+Section~\ref{sec:conclusion} closes the report with a cross-model comparison and
+a discussion of limitations and future directions.
