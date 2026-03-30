@@ -1,0 +1,4 @@
+is_classification: true
+model: lr
+params:
+  C: 1.0

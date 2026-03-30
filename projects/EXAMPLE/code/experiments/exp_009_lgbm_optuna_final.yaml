@@ -1,0 +1,7 @@
+is_classification: true
+model: lgb
+optuna_hints:
+  learning_rate: 0.02
+  max_depth: 4
+  n_estimators: 200
+  num_leaves: 20

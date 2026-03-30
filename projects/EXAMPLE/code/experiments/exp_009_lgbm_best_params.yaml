@@ -1,0 +1,11 @@
+is_classification: true
+model: lgb
+params:
+  colsample_bytree: 0.7951709856982752
+  learning_rate: 0.06704158225397137
+  max_depth: 0
+  n_estimators: 477
+  num_leaves: 122
+  reg_alpha: 1.2146582233952954e-06
+  reg_lambda: 0.00036421650161747824
+  subsample: 0.8538475750739672
