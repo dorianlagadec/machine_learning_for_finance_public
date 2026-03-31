@@ -1,0 +1,2 @@
+model: lgb
+is_classification: true

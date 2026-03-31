@@ -1,0 +1,5 @@
+# Additional dependencies for the frontend server
+# Install with: pip install -r frontend/requirements_frontend.txt
+fastapi>=0.100.0
+uvicorn[standard]>=0.22.0
+python-multipart>=0.0.6

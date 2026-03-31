@@ -1,0 +1,4 @@
+is_classification: false
+model: ridge
+params:
+  alpha: 1.0
