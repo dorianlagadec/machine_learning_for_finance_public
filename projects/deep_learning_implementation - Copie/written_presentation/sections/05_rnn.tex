@@ -1,0 +1,609 @@
+\section{Recurrent Neural Network}
+\label{sec:rnn}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{From FNN to RNN}
+
+The FNN section identified two structural limitations: \emph{order blindness}
+(the lag vector has no positional encoding, so temporal ordering is only
+partially exploited through learned weight magnitudes) and \emph{regime
+blindness} (the model resets entirely between predictions and cannot accumulate
+context across days). A Recurrent Neural Network (RNN) addresses both
+by construction.
+
+Three properties of a flat-window FNN make it unsuitable as sequence length
+grows:
+\begin{itemize}
+  \item \textbf{Order blindness.} Each lag receives an independently learned
+        fixed weight; shuffling the input features degrades performance but
+        does not break it — temporal ordering is an optimisation artefact,
+        not a structural guarantee.
+  \item \textbf{Fixed hard cutoff.} The window size must be chosen upfront;
+        any dependency beyond it is invisible to the model.
+  \item \textbf{Parameter explosion.} Every additional lag adds a full row of
+        input weights, making long contexts expensive.
+\end{itemize}
+
+An RNN processes the sequence one time step at a time, maintaining a
+\emph{hidden state} $\mathbf{h}_t \in \mathbb{R}^{H}$ (where $H$ is the hidden
+size) that acts as a compressed memory of all previous inputs:
+\[
+  \mathbf{h}_t
+  = \tanh\!\bigl(W_{ih}\,\mathbf{x}_t + W_{hh}\,\mathbf{h}_{t-1} + \mathbf{b}\bigr),
+  \qquad \mathbf{h}_0 = \mathbf{0},
+\]
+where $W_{ih} \in \mathbb{R}^{H \times d}$ maps the current input,
+$W_{hh} \in \mathbb{R}^{H \times H}$ is the \emph{recurrence matrix} that
+propagates the hidden state, and $d$ is the input dimension.
+Temporal ordering is now structural: the same $W_{ih}$ and $W_{hh}$ are
+applied at every step, so the position of $\mathbf{x}_t$ in the sequence
+determines which historical context $\mathbf{h}_{t-1}$ it is combined with.
+
+\paragraph{Vanishing gradient problem.}
+During backpropagation through time (BPTT), the gradient with respect to a
+hidden state $T-t$ steps in the past is multiplied by $(W_{hh}^\top)^{T-t}$.
+If the spectral radius $\rho(W_{hh}) < 1$, this product shrinks
+exponentially and long-range gradients vanish; if $\rho(W_{hh}) > 1$, they
+explode. In practice, $\tanh$ saturation further attenuates gradients, limiting
+effective credit assignment to roughly 10--20 steps.
+Gradient clipping is the standard palliative: it caps the gradient norm before
+each update, preventing explosion without curing vanishing.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Architecture and Training Setup}
+
+\subsubsection*{Architecture}
+
+The model feeds a sequence of $T = 20$ scalar inputs (one-day log-returns)
+into a single-layer RNN with hidden size $H = 64$ and $\tanh$ nonlinearity,
+then maps the final hidden state $\mathbf{h}_T$ to a scalar volatility
+forecast through a linear head:
+\[
+  \bigl(x_1, \ldots, x_{20}\bigr)
+  \;\xrightarrow{\;\text{RNN}_{64,\tanh}\;}\;
+  \mathbf{h}_{20} \in \mathbb{R}^{64}
+  \;\xrightarrow{\;\text{Linear}\;}\;
+  \hat{y} \in \mathbb{R}_{+}.
+\]
+The head uses Xavier uniform initialisation and a zero bias; no dropout is
+applied to the baseline.
+
+\subsubsection*{Training}
+
+\begin{table}[H]
+  \centering
+  \caption{RNN baseline training configuration.}
+  \label{tab:rnn_training}
+  \begin{tabular}{ll}
+    \toprule
+    Hyperparameter & Value \\
+    \midrule
+    Loss                & MSE \\
+    Optimizer           & Adam \\
+    Learning rate       & $5 \times 10^{-4}$ \\
+    Batch size          & 64 \\
+    Max epochs          & 200 \\
+    Early stopping      & patience 30 (checked every epoch) \\
+    Gradient clipping   & $\|\mathbf{g}\|_2 \leq 0.5$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection*{Regime-Aware Test Set}
+
+A single aggregate MAE conceals where the model excels and where it breaks
+down. Three non-overlapping held-out periods are selected to represent
+distinct market regimes:
+
+\begin{table}[H]
+  \centering
+  \caption{Regime-aware test set composition.}
+  \label{tab:rnn_regimes}
+  \begin{tabular}{llcc}
+    \toprule
+    Regime & Period & Calendar days & Trading days \\
+    \midrule
+    Calm       & 2017 (full year)       & 251 & 231 \\
+    Clustering & 2022 (full year)       & 251 & 231 \\
+    Spikes     & Mar--Apr 2020 (COVID)  &  43 &  23 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\noindent The calm regime (2017) consists of small, stable daily moves.
+The clustering regime (2022) features persistently elevated volatility
+driven by the Fed rate-hike cycle.
+The spikes regime (Mar--Apr 2020) captures the COVID crash: extreme isolated
+moves never seen in training, a deliberate out-of-distribution test.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_51.png}
+  \caption{Three regime periods highlighted on the full S\&P~500 log-return
+    series. Calm (2017): low, stable moves. Clustering (2022): sustained
+    elevated volatility. Spikes (Mar--Apr 2020): extreme COVID-crash moves.}
+  \label{fig:rnn_regimes}
+\end{figure}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Baseline Results}
+
+Training converges at epoch~58 (early stopping) with a best validation loss
+of~$0.542$.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_52.png}
+  \caption{Training and validation loss curves. Early stopping triggers at
+    epoch~58; the gap between train and validation loss indicates mild
+    overfitting that early stopping contains.}
+  \label{fig:rnn_training_curve}
+\end{figure}
+
+The overall test MAE is \textbf{0.00434} (original log-return scale) or
+equivalently \textbf{0.502} in the standardised space used by the FNN
+section --- a \textbf{13\,\%} improvement over the best FNN
+(MAE~$= 0.579$, lag~$= 3$).
+
+\subsubsection*{Predicted vs True Distribution}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_53.png}
+  \caption{Predicted vs.\ true volatility distribution on the validation set.
+    The predicted distribution is visibly narrower: the model compresses
+    outputs toward the mean and systematically under-represents the tails.}
+  \label{fig:rnn_distribution}
+\end{figure}
+
+The predicted distribution is narrower than the true one: the model compresses
+its outputs toward the mean and under-represents extreme volatility days.
+This \emph{mean-reversion bias} is a structural consequence of MSE training,
+which penalises large deviations quadratically and therefore incentivises
+central-tendency predictions.
+
+\subsubsection*{Regime Breakdown}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_54.png}
+  \caption{Per-regime evaluation. For each regime: predicted vs.\ true
+    volatility time series (left) and distribution comparison (right).
+    Errors grow from calm to clustering to spikes, in line with the
+    mean-reversion bias.}
+  \label{fig:rnn_regime_eval}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{RNN MAE by market regime.}
+  \label{tab:rnn_regime_mae}
+  \begin{tabular}{lcc}
+    \toprule
+    Regime & Trading days & MAE \\
+    \midrule
+    Calm       & 231 & 0.003423 \\
+    Clustering & 231 & 0.007733 \\
+    Spikes     &  23 & 0.010021 \\
+    \midrule
+    Spikes / Calm ratio & & $2.93\times$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The spikes regime is worst by a factor of~$2.93\times$ relative to calm ---
+consistent with the mean-reversion bias: COVID-level moves were never seen
+during training, so the model has no basis for outputting values of that
+magnitude.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Diagnostics: What Did the Model Learn?}
+
+Three complementary angles reveal whether the recurrent pathway is genuinely
+contributing: weight distributions, hidden state activation levels, and
+input sensitivity across sequence positions.
+
+% ──────────────────────────────────────
+\subsubsection{Weight Distributions}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_55.png}
+  \caption{Weight distributions before training. $W_{ih}$ (input$\to$hidden),
+    $W_{hh}$ (hidden$\to$hidden, the memory matrix), and the linear head.
+    All initialised in tight distributions around zero.}
+  \label{fig:rnn_weights_before}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_56.png}
+  \caption{Weight distributions after training. $W_{hh}$ shows the most
+    pronounced reshaping: the distribution widens and develops structure,
+    confirming that the recurrent pathway is actively used by the trained
+    model.}
+  \label{fig:rnn_weights_after}
+\end{figure}
+
+$W_{hh}$ is the most visibly reshaped matrix after training: its distribution
+widens and develops internal structure, while $W_{ih}$ and the head weights
+shift only modestly. This confirms that the recurrent pathway --- not merely
+the input projection --- is genuinely contributing to the model's predictions.
+
+% ──────────────────────────────────────
+\subsubsection{Hidden State Activity}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_57.png}
+  \caption{Average hidden state activation at each sequence position before
+    training. Activity rises from the zero initialisation then plateaus,
+    reflecting the warmup from $\mathbf{h}_0 = \mathbf{0}$.}
+  \label{fig:rnn_hidden_before}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_58.png}
+  \caption{Average hidden state activation after training. The shape
+    (rise then plateau) is unchanged, but the saturation level has increased
+    from $\approx 0.125$ to $\approx 0.325$ --- a $2.5\times$ amplification
+    --- indicating that training taught the network to store more information
+    in each hidden state.}
+  \label{fig:rnn_hidden_after}
+\end{figure}
+
+The shape of the activation profile is identical before and after training
+(rise from zero then plateau), but the scale changes dramatically: saturation
+level increases from $\approx 0.125$ to $\approx 0.325$ ($2.5\times$).
+The plateau is reached after roughly 20--30\,\% of the sequence, suggesting
+that effective memory is concentrated in the most recent steps despite the
+full 20-lag window.
+
+% ──────────────────────────────────────
+\subsubsection{Input Sensitivity by Lag}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_59.png}
+  \caption{Input sensitivity before training: how much does perturbing
+    $\mathbf{x}_t$ move the final prediction? Sensitivity collapses at
+    lags 2--3; the model is effectively ignoring all but the most
+    recent inputs.}
+  \label{fig:rnn_sensitivity_before}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_510.png}
+  \caption{Input sensitivity after training. Sensitivity is now distributed
+    across the full 20-lag window, demonstrating that training has taught
+    the recurrent pathway to route historical context to the final prediction.}
+  \label{fig:rnn_sensitivity_after}
+\end{figure}
+
+Before training, sensitivity collapses at lags 2--3: the untrained model
+is effectively ignoring all but the most recent input.
+After training, sensitivity is spread across the full 20-lag window.
+This is the clearest evidence that the recurrent pathway is working:
+training redistributed gradient-driven credit across the entire sequence.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Failure Analysis}
+
+% ──────────────────────────────────────
+\subsubsection{Residuals Over Time}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_511.png}
+  \caption{Residuals over time by regime. White line: true absolute return.
+    Coloured area: absolute prediction error $|y - \hat{y}|$.
+    The error envelope tracks the true volatility signal: small and stable
+    in the calm regime, elevated in clustering, and spiking sharply during
+    the COVID crash.}
+  \label{fig:rnn_residuals}
+\end{figure}
+
+The error envelope directly tracks the magnitude of true volatility: residuals
+are small and stable in the calm regime, persistently elevated in clustering,
+and spike sharply during the COVID crash. Error variance is proportional to
+volatility magnitude --- the model's worst moments coincide exactly with the
+market's worst moments.
+
+% ──────────────────────────────────────
+\subsubsection{Error vs Magnitude}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_512.png}
+  \caption{True volatility vs.\ prediction error, coloured by regime.
+    The positive slope confirms mean-reversion bias across all regimes.
+    Histograms (right) show the direction of the bias per regime: the spikes
+    histogram is shifted furthest left (systematic under-prediction); the
+    calm histogram is nearly centred.}
+  \label{fig:rnn_error_magnitude}
+\end{figure}
+
+The scatter plot reveals a positive slope between true volatility and
+prediction error across all three regimes: the larger the true move, the
+larger the error. The per-regime histograms confirm the direction: the
+spikes regime is shifted furthest toward negative errors (systematic
+under-prediction), while calm predictions are nearly unbiased.
+The model is most wrong on the days that matter most.
+
+% ──────────────────────────────────────
+\subsubsection{Worst Predictions Per Regime}
+
+Each panel shows the worst 5\,\% of predictions for a given regime: the
+20-step input lookback (blue), the true target (purple), and the model
+prediction (red dot).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_513.png}
+  \caption{Worst predictions --- calm regime. Failures are simply the
+    largest true volatility values within the regime; there is no
+    identifiable input pattern. The model's error is magnitude-driven,
+    not structure-driven.}
+  \label{fig:rnn_worst_calm}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_514.png}
+  \caption{Worst predictions --- clustering regime. Same pattern as calm:
+    failures coincide with the largest true values; no systematic
+    lookback pattern is visible.}
+  \label{fig:rnn_worst_clustering}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_515.png}
+  \caption{Worst predictions --- spikes regime. Both worst cases show
+    extreme COVID-level volatility ($\approx 0.046$) already in the input
+    window. The model's prediction is far too small: it never learned to
+    output values of this magnitude because they were essentially absent
+    from the training set.}
+  \label{fig:rnn_worst_spikes}
+\end{figure}
+
+In the calm and clustering regimes, failures are simply the largest true
+values within the regime: there is no structural input pattern that a better
+model could exploit. In the spikes regime, however, both worst predictions
+show extreme COVID-level volatility already present in the lookback window,
+yet the model still outputs a near-mean prediction.
+\textbf{The failure is not a memory limitation} --- the input context is
+already extreme. It is an \emph{output-range problem}: the model never
+encountered targets of magnitude $\sim 0.046$ during training and therefore
+never learned to produce predictions in that range.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Vanishing Gradient Diagnosis}
+
+% ──────────────────────────────────────
+\subsubsection{$W_{hh}$ Spectral Radius}
+
+During BPTT, the gradient signal flowing back $k$ steps is multiplied by
+$(W_{hh}^\top)^k$. The fate of each gradient direction is determined by the
+corresponding singular value $\sigma_i$ of $W_{hh}$: if $\sigma_i < 1$ the
+contribution of that direction vanishes; if $\sigma_i > 1$ it explodes.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_516.png}
+  \caption{Singular value spectrum of $W_{hh}$ after training.
+    Spectral radius $\rho = 1.4$ (exploding regime overall), but roughly
+    57 of the 64 directions lie below~1. Training has deliberately pushed
+    5--7 directions above~1 to maintain gradient flow through the tanh
+    saturation; gradient clipping prevents these from causing instability.}
+  \label{fig:rnn_spectrum}
+\end{figure}
+
+The spectral radius of the trained $W_{hh}$ is $\rho = 1.4$, placing the
+model in the exploding-gradient regime in aggregate. However, approximately
+57 of the 64 singular values lie below~1; only 5--7 directions were
+deliberately pushed above~1 by training. This is the only way the model can
+maintain gradient flow over 20 steps of $\tanh$ saturation: a handful of
+amplifying directions compensate for the many vanishing ones.
+Gradient clipping (threshold 0.5) is therefore not merely a safety measure
+--- it is a necessary component of stable training given this spectral
+structure.
+
+% ──────────────────────────────────────
+\subsubsection{Output Sensitivity per Time Step}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_517.png}
+  \caption{Output sensitivity to the hidden state at each time step:
+    $\partial\hat{y}/\partial\mathbf{h}_t$ as a function of lag.
+    Sensitivity decays by 50\,\% at step~1 and is essentially zero by
+    step~2 --- the prediction is nearly insensitive to any hidden state
+    older than one step.}
+  \label{fig:rnn_grad_norms}
+\end{figure}
+
+The output sensitivity to $\mathbf{h}_t$ collapses within one step:
+50\,\%-decay occurs at lag~1 and the signal is negligible by lag~2.
+This is the backward view of vanishing gradients --- the Jacobian of the
+output with respect to past hidden states decays rapidly.
+This seems to contradict the input sensitivity result (Section~5.4.3), which
+showed that perturbations to $\mathbf{x}_t$ at all lags affect the output.
+The next section resolves this apparent contradiction.
+
+% ──────────────────────────────────────
+\subsubsection{Effective Memory}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_518.png}
+  \caption{Effective memory: correlation between the final hidden state
+    $\mathbf{h}_T$ and each input $\mathbf{x}_t$ at different lags.
+    Despite the near-zero gradient norms beyond lag~2, the correlation
+    decays gradually across the full 20-lag window and remains meaningful
+    at lags 15--20.}
+  \label{fig:rnn_effective_memory}
+\end{figure}
+
+The correlation between the final hidden state $\mathbf{h}_T$ and each
+input $\mathbf{x}_t$ decays gradually across the full 20-step window and
+remains non-negligible at lags 15--20. This resolves the apparent
+contradiction with Section~5.6.2: the two metrics measure different things.
+
+\begin{itemize}
+  \item \textbf{Output sensitivity} (Section~5.6.2) measures the local linear
+        derivative $\partial\hat{y}/\partial\mathbf{h}_t$: how much the output
+        changes if the hidden state at step~$t$ is infinitesimally perturbed.
+        This collapses because the Jacobian of the recurrence is small in most
+        directions.
+  \item \textbf{Effective memory} (here) measures the global nonlinear
+        correlation between $\mathbf{h}_T$ and $\mathbf{x}_t$: whether the
+        information from past inputs is encoded in the final state, regardless
+        of the local derivative.
+\end{itemize}
+
+A function can be strongly correlated with a variable while having a near-zero
+local derivative at the current operating point.
+The forward dynamics of the RNN do accumulate historical context into
+$\mathbf{h}_T$; it is the backward gradient path that fails to
+propagate credit for that information.
+
+% ──────────────────────────────────────
+\subsubsection{Effective Memory by Regime}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth]{figures/figure_519.png}
+  \caption{Effective memory split by regime.
+    Calm: smooth exponential decay from $\approx 0.55$ to $0.05$--$0.12$.
+    Clustering: similar shape but sharper drop, concentrated on the most
+    recent days.
+    Spikes: highest initial correlation ($\approx 0.60$) with a
+    non-monotonic profile and secondary peaks at lags~7--11 and~12--17,
+    reflecting the autocorrelation structure of the COVID crash itself.}
+  \label{fig:rnn_memory_regime}
+\end{figure}
+
+The three regimes produce qualitatively different memory profiles:
+\begin{itemize}
+  \item \textbf{Calm:} Smooth decay from $\approx 0.55$ (lag~1) to
+        $0.05$--$0.12$ (lag~20). The hidden state carries a clean,
+        recency-weighted summary of recent history.
+  \item \textbf{Clustering:} Similar shape but a sharper initial drop; the
+        model relies more heavily on the most recent days, consistent with
+        the autocorrelated nature of volatility clustering.
+  \item \textbf{Spikes:} Highest initial correlations ($\approx 0.60$) and
+        a non-monotonic profile with secondary peaks at lags~7--11 and~12--17.
+        Every day in the crash window is extreme; the secondary peaks
+        reflect the autocorrelation structure of the crash itself, not a
+        failure of the memory mechanism.
+\end{itemize}
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Hyperparameter Grid Search}
+
+A grid search over 48 configurations was run to validate the baseline
+architecture choices:
+\begin{align*}
+  &\text{seq\_len} \in \{10, 20, 30\}, \quad
+   H \in \{32, 64\}, \quad
+   \text{layers} \in \{1, 2\}, \\
+  &\alpha\,(\text{learning rate}) \in \{5{\times}10^{-4},\, 10^{-3}\}, \quad
+   \text{clip} \in \{0.5, 1.0\}.
+\end{align*}
+Each configuration was trained with a light budget (80 epochs, early stopping
+at patience~15) to allow broad coverage.
+
+\begin{table}[H]
+  \centering
+  \caption{Top-5 configurations from the grid search (ranked by validation
+    MAE). Spread from rank~1 to rank~48 is only $0.00042$ in validation MAE.}
+  \label{tab:rnn_gridsearch}
+  \begin{tabular}{cccccccccc}
+    \toprule
+    Rank & seq & $H$ & layers & $\alpha$ & clip
+         & val MAE & calm & clust. & spikes \\
+    \midrule
+    1 & 20 & 64 & 1 & $5{\times}10^{-4}$ & 0.5 & 0.004219 & 0.002860 & 0.008079 & 0.009979 \\
+    2 & 30 & 64 & 2 & $10^{-3}$          & 0.5 & 0.004228 & 0.002948 & 0.007597 & 0.008271 \\
+    3 & 20 & 32 & 2 & $5{\times}10^{-4}$ & 1.0 & 0.004229 & 0.002763 & 0.007710 & 0.010274 \\
+    4 & 10 & 64 & 2 & $10^{-3}$          & 0.5 & 0.004238 & 0.002633 & 0.007917 & 0.015570 \\
+    5 & 30 & 32 & 1 & $5{\times}10^{-4}$ & 0.5 & 0.004242 & 0.003222 & 0.007692 & 0.007998 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two conclusions emerge from the grid search:
+
+\paragraph{Architecture is the ceiling, not hyperparameters.}
+The spread from rank~1 to rank~48 is only $0.00042$ in validation MAE ---
+essentially nothing.
+Tuning hidden size, number of layers, learning rate, or gradient clipping
+produces negligible gains. The model's performance ceiling is set by its
+architecture, not by any hyperparameter combination within this search space.
+
+\paragraph{Sequence length matters, but only for the spikes regime.}
+Sequence length~10 is consistently weak on the spikes regime
+(MAE~$= 0.015$--$0.017$); sequence length~30 clusters around
+MAE~$\approx 0.008$ on spikes --- a meaningful improvement.
+Crucially, this benefit arises from \emph{forward-pass accumulation}, not
+from improved gradient-based learning: as shown in Section~5.6.2, gradients
+do not flow back beyond lag~2, but the forward dynamics do encode a
+longer history into $\mathbf{h}_T$ when more input steps are provided.
+The longer sequence helps because the COVID crash was a sustained event;
+seeing more of it in context improves the hidden state at inference time.
+The trade-off is a small degradation on the calm regime, where longer
+windows introduce additional noise from distant, uninformative lags.
+
+% ──────────────────────────────────────────────────────────────────────────────
+\subsection{Summary}
+
+\begin{table}[H]
+  \centering
+  \caption{Best RNN configuration (baseline).}
+  \label{tab:rnn_best}
+  \begin{tabular}{lll}
+    \toprule
+    Parameter & Choice & Rationale \\
+    \midrule
+    Sequence length & 20    & Balance between context and calm-regime noise \\
+    Hidden size     & 64    & Sufficient capacity; larger gives no gain \\
+    Layers          & 1     & Additional layers add complexity without benefit \\
+    Optimizer       & Adam, $\alpha = 5{\times}10^{-4}$ & Stable convergence \\
+    Grad.\ clipping & 0.5   & Required given $\rho(W_{hh}) = 1.4$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+The RNN achieves \textbf{MAE~$= 0.502$} (standardised) versus \textbf{0.579}
+for the best FNN --- a \textbf{13\,\%} improvement --- by exploiting temporal
+ordering and accumulating context across the 20-step sequence.
+Three diagnostic findings characterise the model's behaviour and limitations:
+
+\begin{enumerate}
+  \item \textbf{Mean-reversion bias is an output-range problem, not a
+        context problem.} The model fails on extreme days not because it
+        lacks historical information (the crash context is clearly encoded
+        in the hidden state) but because it never encountered targets of
+        that magnitude during training and therefore never learned to
+        output them.
+  \item \textbf{Forward dynamics accumulate history; backward gradients do
+        not.} The effective memory (correlation-based) spans 20 lags; the
+        gradient-based sensitivity collapses within 2 steps. Longer sequences
+        improve inference by enriching the forward hidden state, even though
+        the recurrence matrix cannot propagate credit for that information
+        backward.
+  \item \textbf{Architecture, not hyperparameters, is the binding
+        constraint.} A 48-configuration grid search produces a spread of
+        only $0.00042$ MAE. The vanilla RNN is structurally limited: the
+        final prediction depends almost entirely on $\mathbf{h}_T$, which
+        is the hidden state most strongly influenced by the most recent step.
+        The model sees 30 lags of history but learns primarily from the last
+        one.
+\end{enumerate}
+
+These structural limitations suggest that a gated architecture such as the LSTM
+is a natural next step, as its cell state is specifically designed to address
+the gradient collapse identified here.
