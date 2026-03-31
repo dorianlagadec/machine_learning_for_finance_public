@@ -1,0 +1,16 @@
+[project]
+name = "gdelt-brent-ml"
+requires-python = ">=3.11"
+
+dependencies = [
+    "pandas",
+    "numpy",
+    "yfinance",
+    "scikit-learn",
+    "matplotlib",
+    "seaborn",
+    "requests",
+    "pyarrow",
+    "jupyter",
+    "xgboost",
+]
