@@ -1,0 +1,557 @@
+%% ============================================================
+%%  Project Report — Machine Learning, Master 203, Dauphine
+%%  Iterated Prisoner's Dilemma & Q-Learning
+%% ============================================================
+
+\documentclass[11pt, a4paper]{article}
+
+%% ---- Encoding & language ----
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[english]{babel}
+
+%% ---- Page layout ----
+\usepackage{geometry}
+\geometry{top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm}
+\usepackage{setspace}
+\onehalfspacing
+
+%% ---- Typography ----
+\usepackage{lmodern}
+\usepackage{microtype}
+
+%% ---- Mathematics ----
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{mathtools}
+
+%% ---- Figures & tables ----
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+
+%% ---- Colours & code ----
+\usepackage{xcolor}
+\usepackage{listings}
+\lstset{
+  basicstyle=\footnotesize\ttfamily,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{gray}
+}
+
+%% ---- Hyperlinks ----
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue!70!black,
+  citecolor=green!50!black,
+  urlcolor=blue!80!black
+}
+
+%% ---- Bibliography ----
+\usepackage{natbib}
+\bibliographystyle{plainnat}
+
+
+%% ---- Headers & footers ----
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{Master 203 — Machine Learning}
+\lhead{Prisoner's Dilemma \& Q-Learning}
+\cfoot{\thepage}
+
+%% ---- Mathematical environments ----
+\newtheorem{definition}{Definition}[section]
+\newtheorem{proposition}{Proposition}[section]
+\newtheorem{remark}{Remark}[section]
+
+%% ============================================================
+%%  METADATA
+%% ============================================================
+
+\title{
+  \vspace{-1cm}
+  {\Large Project Report — Machine Learning}\\[0.4em]
+  {\LARGE \textbf{Reinforcement Learning in the Iterated Prisoner's Dilemma:}}\\[0.3em]
+  {\Large Convergence and Comparative Analysis of Strategies}
+}
+
+\author{
+  Gabriel \textsc{Tseng} \and
+  Axel \textsc{Rubio} \and
+  Benjamin \textsc{Krief} \and
+  Krea \textsc{Fares}\\[0.5em]
+  \small Master 203 — Université Paris-Dauphine\\
+  \small Machine Learning Course — \today
+}
+
+\date{}
+\begin{document}
+
+\maketitle
+\thispagestyle{empty}
+
+%% ---- Abstract ----
+\begin{abstract}
+
+Game theory provides a rigorous framework for analysing strategic interactions in which individual incentives diverge from collective welfare, 
+a tension that arises naturally in multi-agent systems like financial markets. 
+The Iterated Prisoner's Dilemma (IPD) is a canonical instance of this tension, and applying reinforcement learning to it allows us to study how adaptive agents 
+learn to navigate without any prior knowledge of the game structure.\\
+
+This report will go through the application of Q-learning to the IPD. 
+There are two objectives: first, to understand how a rational learning agent behaves when facing classical deterministic strategies; 
+second, to assess the relative importance of Q-learning hyperparameters : learning rate $\alpha$, discount factor $\gamma$, $\varepsilon$-greedy exploration policy.\\
+
+Our experiments show that a Q-learning agent converges to systematic defection when facing any player that do not punish defection, consistent with the dominant Nash equilibrium of the one-shot game. 
+We compare its performance against a set of baseline strategies, ranging from naive heuristics (\textit{Always Cooperate}, \textit{Always Defect}) to reactive strategies (\textit{Tit for Tat} and its variants), and discuss the conditions under which cooperation can or cannot emerge in a mixed population.
+\end{abstract}
+
+\newpage
+\tableofcontents
+\newpage
+
+\section{Introduction: The Prisoner's Dilemma}
+\label{sec:intro}
+%% ============================================================
+
+\subsection{Game description}
+
+The Prisoner's Dilemma is a symmetric two-player game originally formulated by \citet{tucker1950} and popularised in the context of game theory by \citet{axelrod1984}. At each round, two players simultaneously and independently choose between two actions: \textbf{cooperate} (C) or \textbf{betray} (B). The payoff matrix is defined as follows:
+
+\begin{table}[H]
+  \centering
+  \caption{Payoff matrix of the Prisoner's Dilemma (row = player 1, column = player 2).}
+  \label{tab:payoff}
+  \begin{tabular}{c|cc}
+    \toprule
+                   & \textbf{Cooperate (C)} & \textbf{Betray (B)} \\
+    \midrule
+    \textbf{Cooperate (C)} & $(3,\, 3)$ & $(0,\, 4)$ \\
+    \textbf{Betray (B)}    & $(4,\, 0)$ & $(1,\, 1)$ \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Those payoffs are defined such that they satisfy the following inequalities (as long as they do, the game is a Prisoner's Dilemma):
+
+\begin{equation}
+    T > R > P > S
+\end{equation}
+
+where
+
+\begin{itemize}
+    \item $T$ is the temptation to defect (4)
+    \item $R$ is the reward for mutual cooperation (3)
+    \item $P$ is the punishment for mutual defection (1)
+    \item $S$ is the sucker's payoff (0)
+\end{itemize}
+
+The structure of this game gives rise to a fundamental tension between individual rationality and collective optimum: \textbf{betraying is a strictly dominant strategy} as it yields a higher payoff regardless of the other player's action, yet if both players choose it, the outcome $(B, B) = (1,1)$ is Pareto-dominated by $(C, C) = (3,3)$.
+
+\subsection{The iterated version (IPD)}
+
+In the Iterated Prisoner's Dilemma (IPD), both players interact a large number of times. In the original version, they played 200 times. Here, we set $T = 100{,}000$ rounds for convergence purposes. The repetition of the game changes the analysis: the possibility of punishing past defection and rewarding past cooperation allows conditional strategies to establish themselves. Axelrod demonstrated empirically, through computer tournaments, that the \textit{Tit for Tat} strategy (cooperate on the first move, then mirror the opponent's previous action) achieves remarkable performance in an ecosystem of varied strategies. In fact, the strategy won in the two tournaments he organized.
+
+\subsection{Research question}
+
+This project will try to answer to the following question: \\
+
+\textit{Can an agent equipped with reinforcement learning (Q-learning) learn an effective strategy in the IPD, and under what conditions does it converge to cooperation or defection?}
+
+\subsection{Outline}
+In order to answer this question, we will first implement a Q-learning agent from scratch and confront it with a controlled set of opponents in a battle. Not taking into account any prior knowledge of the game, we observe and measure the agent's emergent behaviour : its cooperation rate, its exploitation of weak opponents, its response to punitive strategies, and compare these outcomes to the Nash equilibrium prediction. An analysis over the key hyperparameters of the model ($\alpha$, $\gamma$, $\varepsilon$) then allows us to highlight the role of each component of the learning rule.
+We shall then extend the analysis to multiple Q-learning agents interacting with each other, and observe the emergence of cooperation or defection in a mixed population.
+\\
+
+The report is organised as follows. Section~\ref{sec:strategies} presents the full set of implemented strategies and the experimental framework. Section~\ref{sec:qlearning} describes the Q-learning model, its mathematical formulation, and the rationale for this choice. Section~\ref{sec:baselines} compares baseline strategy performance. Section~\ref{sec:hyperparams} analyses hyperparameter sensitivity. Section~\ref{sec:results} presents our experimental results, and Section~\ref{sec:conclusion} concludes.
+
+\newpage
+
+\section{Experimental Framework and Strategy Set}
+\label{sec:strategies}
+
+\subsection{Simulator architecture}
+
+The simulator is built around three components: a \texttt{Strategy} (the decision rule), an \texttt{Agent} (a player carrying a strategy, a score, and a local interaction memory), and a \texttt{Game} (the orchestrator). At each round, both agents simultaneously submit an action to the \texttt{Game}, which resolves payoffs from the matrix (same as in \ref{tab:payoff}), updates scores, and writes the outcome to each agent's memory. All distinct agent pairs are played exhaustively for $T = 100{,}000$ rounds.
+
+\subsection{Implemented strategies}
+
+In order to test a learning agent, we implemented a set of strategies to play against, drawn from the canonical taxonomy of IPD strategies \citep{kuhn2019sep}. These strategies can be divided into two categories: naive strategies and reactive strategies.
+
+\subsubsection{Naive strategies (baseline heuristics)}
+
+\begin{description}
+  \item[\texttt{AlwaysCooperate}] Cooperates unconditionally at every round. Represents the maximum cooperation bound.
+  \item[\texttt{AlwaysBetray}] Defects systematically. Constitutes the Nash equilibrium of the IPD.
+  \item[\texttt{RandomAction}] Defects or cooperates with the same probability $\frac{1}{2}$.
+  \item[\texttt{ProbaCooperation}] Cooperates with a fixed probability $p$ (parameter).
+\end{description}
+
+\subsubsection{Reactive strategies}
+
+\begin{description}
+  \item[\texttt{TitForTat} (TFT)] Cooperates on the first round, then mirrors the opponent's previous action.
+  \item[\texttt{SuspiciousTitForTat}] Identical to TFT but starts with a defection.
+  \item[\texttt{TitForTwoTats}] Only defects after two consecutive defections by the opponent (more lenient).
+  \item[\texttt{TwoTitsForTat}] Defects twice following a single received defection (more punitive).
+  \item[\texttt{Joss}] TFT with noise: defects randomly with probability $p_j$ to exploit cooperators.
+  \item[\texttt{DiscriminatingAltruist}] Cooperates with any player who has never defected; otherwise refuses engagement.
+  \item[\texttt{Bully}] Defects until the opponent defects, then cooperates. Exploits accommodating strategies.
+\end{description}
+\newpage
+%% 
+
+\section{The Q-Learning Model}
+\label{sec:qlearning}
+
+\subsection{Model selection for the Iterated Prisoner's Dilemma}
+
+The Iterated Prisoner's Dilemma (IPD) can be analysed not only through the lens of classical
+game theory, but also as a reinforcement learning (RL) problem. At each step of the game, an
+agent observes the current state of the environment and receives a reward based on the outcome
+of the interaction. The goal of the agent is to learn, over time, a \textit{policy} (which is a
+strategy that maps states to actions) that maximises its cumulative reward. This framing
+naturally calls for an RL approach.
+
+Among the available RL algorithms, three natural candidates arise: SARSA, Q-Learning, and Deep
+Q-Networks (DQN). We argue that Q-Learning is the most appropriate choice here, for the
+following reasons.
+
+\paragraph{On-policy vs.\ off-policy learning.}
+A key distinction in RL is between \textit{on-policy} and \textit{off-policy}
+algorithms. 
+An on-policy algorithm, such as SARSA, learns the value of the policy it is
+currently following, including all its exploratory moves. In other words, if the agent
+sometimes acts randomly to explore its environment, SARSA will account for that randomness in
+what it learns. This means that the learned policy reflects a \textit{mixture} of optimal and
+exploratory behaviour. 
+An off-policy algorithm, such as Q-Learning, instead learns the value
+of the \textit{best possible action} at each state, regardless of what the agent actually does
+during training. Exploration is used purely as a means to gather information, but the learned
+policy is always the greedy, optimal one. 
+
+In the context of the IPD, where the objective is to identify the optimal long-term strategy
+against an opponent, off-policy learning is clearly preferable.
+We want to evaluate what the agent \textit{should} do, not what it does while exploring.
+
+Note that DQN extends Q-Learning by using a neural network to approximate the Q-value function, which
+makes it powerful in environments with large or continuous state spaces. However, this added complexity comes at a cost.
+Neural networks require significant amounts of data and computational resources to train, and introduce instability. 
+In the IPD, the state space is minimal as it is reduced to each player's last action. Therefore, only
+a handful of discrete states exist. A simple tabular Q-table is not only sufficient but also more
+transparent, more efficient, and easier to analyse.
+
+
+To summarise, Q-Learning is the most appropriate algorithm here, based on our assumptions:
+\begin{itemize}
+    \item \textbf{Discrete and finite state space:} the IPD's state space (each player's last
+    action) is small and discrete, making the tabular Q-table both exact and computationally
+    lightweight.
+
+    \item \textbf{Off-policy learning:} the agent learns the optimal policy even while
+    exploring, allowing it to probe the opponent's reactions without compromising the quality
+    of the learned strategy.
+
+    \item \textbf{Guaranteed convergence:} under standard conditions (sufficient exploration
+    and a decaying learning rate), Q-Learning is proven to converge to the optimal Q-values,
+    providing a theoretically sound foundation for our analysis.
+\end{itemize}
+
+\subsection{Mathematical formulation}
+
+\paragraph{State space.}
+The state $s_t$ at time $t$ is the pair of actions from the previous round.
+
+\paragraph{Action space.}
+$\mathcal{A} = \{C, B\}$.
+
+\paragraph{Reward.}
+The immediate reward $r_t$ is the payoff matrix value obtained at round $t$ (cf.\ Table~\ref{tab:payoff}).
+
+\paragraph{Update rule (Bellman equation).}
+The Q-table is updated after each round according to:
+\begin{equation}
+  Q(s_t, a_t) \;\leftarrow\; Q(s_t, a_t) \;+\; \alpha \Bigl[r_t + \gamma \max_{a'} Q(s_{t+1}, a') - Q(s_t, a_t)\Bigr],
+  \label{eq:bellman}
+\end{equation}
+where $\alpha \in (0,1]$ is the learning rate and $\gamma \in [0,1)$ the discount factor (valuation of future rewards).
+
+\paragraph{$\varepsilon$-greedy policy.}
+The agent selects a random action with probability $\varepsilon$ (exploration) and the action with the highest Q-value with probability $1 - \varepsilon$ (exploitation). $\varepsilon$ decays multiplicatively at each step by a factor \texttt{epsilon\_decay}, down to a floor \texttt{epsilon\_min}.
+We could use a constant epsilon, but the goal is to learn the optimal policy, so we need to explore at the beginning and then exploit.
+
+
+\section{Comparison with Baseline Strategies}
+\label{sec:baselines}
+
+\subsection{Evaluation framework}
+
+Strategies are evaluated on several metrics computed at the end of the simulation:
+\begin{itemize}
+  \item \textbf{Cooperation rate}: proportion of C moves played by the agent;
+  \item \textbf{Exploitation rate} (defecting when the opponent cooperates);
+  \item \textbf{Victimisation rate} (cooperating when the opponent defects);
+  \item \textbf{Mutual cooperation rate}: proportion of $(C, C)$ rounds.
+  \item \textbf{Mutual defection rate}: proportion of $(B, B)$ rounds.
+\end{itemize}
+
+\subsection{Comparative results}
+
+For the first presented results, we chose the following set of parameters (the most sensitive one being gamma, our agent here values future rewards a lot):
+\begin{center}
+  \begin{tabular}{ccccc}
+    \toprule
+    $\alpha$ & $\gamma$ & $\varepsilon_0$ & $\varepsilon_{\min}$ & $\varepsilon_{\text{decay}}$ \\
+    \midrule
+    0.1 & 0.9 & 1.0 & 0.01 & 0.9999 \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+
+\subsubsection{Naive strategies}
+
+\begin{table}[H]
+  \centering
+  \caption{Behavioural summary of the Q-learning agent against naive strategies.}
+  \label{tab:results}
+  \begin{tabular}{lrr||rrrr}
+    \toprule
+    Strategy & Defect. & Coop. & Exploit. & Victimised & Mut.C & Mut.D\\
+    \midrule
+    
+    AlwaysCooperate     & 98.6 \% & 1.4\% & 98.6\% & 0\% & 1.4\% & 0.0\%  \\
+    AlwaysBetray        & 98.6 \%& 1.4\% & 0\% & 1.4\% & 0\% & 98.6\%  \\
+    RandomAction        & 97.4 \%& 2.6\% & 48.7\% & 1.3\% & 1.3\% & 48.7\%  \\
+    ProbaCooperation(p=0.7)   & 97.5 \% & 2.5\% & 68.2\% & 0.8\% & 1.8\% & 29.2\%  \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+These results are fully consistent with game-theoretic predictions: the agent converges to systematic defection in all cases. \\
+
+Against \texttt{AlwaysCooperate}, exploitation reaches $98.6\%$; the residual $1.4\%$ cooperation is due to the exploration phase, not a learned behaviour : the agent may cooperate at the beginning of the game but then exploits the opponent.
+Against \texttt{AlwaysBetray}, the agent reciprocates by defecting as well, converging to the Nash equilibrium $(B,B)$. \\
+
+Notably, the exploitation rate is closely related to the opponent's cooperation probability: $\approx 48.7\%$ against \texttt{RandomAction} ($p=0.5$) and $\approx 68.2\%$ against \texttt{ProbaCooperation} ($p=0.7$), confirming that the agent has learned to consistently defect.\\
+
+The conclusion of this first part is that cooperation cannot arise against naive strategies: \textbf{defection must be punished and cooperation must be rewarded}.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img/naive_coop.png}
+  \caption{Q-learning agent policy against naive strategies.}
+  \label{fig:naive_coop}
+\end{figure}
+
+\subsubsection{Reactive strategies}
+ As we have seen in the previous section, cooperation cannot arise against naive strategies. However, it may arise against reactive strategies. This section shows how our agent behaves against reactive strategies.
+
+\begin{table}[H]
+  \centering
+  \caption{Behavioural summary of the Q-learning agent against reactive strategies.}
+  \label{tab:results2}
+  \begin{tabular}{lrr||rrrrrr}
+    \toprule
+    Strategy & Defect. & Coop. & Exploit. & Victimised & Mut.C & Mut.D \\
+    \midrule
+    
+    TitForTat              & 1.4\%  & 98.6\% & 1.2\% & 1.2\% & 97.4\% & 0.2\% \\
+    SuspiciousTitForTat    & 1.4\%  & 98.6\% & 1.2\% & 1.2\% & 97.4\% & 0.2\% \\
+    TwoTitsForTat          & 1.5\%  & 98.5\% & 1.0\% & 2.2\% & 96.3\% & 0.5\% \\
+    Joss                   & 1.6\%  & 98.4\% & 1.2\% & 11.0\% & 87.4\% & 0.4\% \\
+    TitForTwoTats          & 50.0\% & 50.0\% & 49.8\% & 0.7\% & 49.3\% & 0.2\% \\
+    DiscriminatingAltruist & 98.5\% & 1.5\%  & 0.0\% & 1.5\% & 0.0\% & 98.5\% \\
+    Bully                  & 98.6\% & 1.4\%  & 97.4\% & 0.3\% & 1.2\% & 1.1\% \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Analysing the results, we can see that DiscriminatingAltruist and Bully are the only strategies that do not lead to cooperation. From this, we can deduce that in order for cooperation to arise, the agent must be able to react both to defection and cooperation.
+These two fails as they tend to not be "forgiving" and "retaliating" enough. Here again, the agent converges to defection. \\
+
+When it comes to TitForTat and its variants, the Q-learning agent manages to cooperate with them. 
+The first interesting case is against TitForTwoTats : the agent manages to cooperate with it, but only 50\% of the time. 
+This strategy is more forgiving than the others, we can see through the results that the agent understood its opponent strategy and exploited it by defecting as much as possible but not twice in a row (50\% cooperation, 0.7\% victimised). \\
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img/lenient_tft_coop.png}
+  \caption{Q-learning agent policy against lenient Tit-for-Tat strategies.}
+  \label{fig:lenient_tft_coop}
+\end{figure}
+
+Note that since our state space is limited to the last action of each player, the Q-learning agent defects as much as it can given each state. With a larger state space, we can make the assumption that the agent could be playing against even lenient strategies like TitForThreeTats or TitForFourTats ad exploit them with respectively 66\% and 75\% defection rate. \\
+
+Finally, we got the the strategies that applies the "Eye for an eye" rule. All those strategies lead to cooperation from the agent. This is conclusive with the theory, as it is intuitive that the agent should cooperate with strategies that cooperate with it, and defect it when it defects them (on the long run, you prefer to get 3 points every turn rather than 1).\\
+
+Notably, we see that overpunishing strategies (or just less forgiving strategies) such as Joss and TwoTitsForTat lead to less cooperation. The agent tends to cooperate marginally less but get victimised more often. The Q-learning agent adapts its q-table depending on the it's own actions and the opponent's reactions. Therefore, once its politics has converged, Joss can easily exploit it as it tends to defect marginally, which is not going to be punished by the agent. \\ 
+
+We deduce that the Q-learning agent is able to learn the optimal strategy and that cooperation can arise and be maximised with strategies following conditions : \textbf{able to react both to defection and cooperation, "forgiving" and "retaliating" enough, and not overpunishing}. \\
+
+\section{Hyperparameter Sensitivity Analysis}
+\label{sec:hyperparams}
+
+The Q-learning agent updates its Q-table after each round via the Bellman equation:
+\[
+Q(s_t, a_t) \leftarrow Q(s_t, a_t) + \alpha\bigl[r_t + \gamma \max_{a'} Q(s_{t+1}, a') - Q(s_t, a_t)\bigr]
+\]
+\subsection{Impact of $\varepsilon$, exploration parameter}
+
+In a Q-learning framework, $\varepsilon$ controls the trade-off between exploration and exploitation.
+At each decision that the agent has to make, it will choose to explore with probability $\varepsilon$ and exploit with probability $1-\varepsilon$.
+Therefore, a high $\varepsilon$ means that the agent will try "new things", while a low $\varepsilon$ means that the agent will stick to what it knows.
+In this framework where we want to know if the agent is able to learn the optimal strategy, we need to make sure that the agent has enough time to explore the state space, while exploiting the best strategies it has found at a late stage. 
+Therefore, we choose to start with a high $\varepsilon$ and decrease it over time. \\
+
+Since the agent does not know anything at first, we need to start at \textbf{100\%} ($\varepsilon_0 = 0.0$ would be a random agent). For the lower bound, we want it to be small enough to ensure that the agent exploits the best strategies it has found at a late stage, while not being 0. The reason why is that it would get victimised too much against opponents like Joss who exploits static strategies.
+Lastly, we need to choose a decay rate. If it is too high, the agent might converge to a suboptimal strategy. If it is too low, the agent will still be exploring at the end of the game, which is not optimal. This parameter is related to the number of rounds (T=100,000) as we want it to be small after a certain number of rounds.  \\
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.70\textwidth]{img/epsilon_decay.png}
+  \caption{Slower decay allows for a longer exploration phase before locking into cooperation.}
+  \label{fig:epsilon_decay}
+\end{figure}
+
+For our simulation, we choose $\varepsilon_0 = 1.0$, $\varepsilon_{\min} = 0.01$ and $\varepsilon_{\text{decay}} = 0.9999$.
+
+\subsection{Impact of $\alpha$, learning rate}
+
+In Q-learning, $\alpha$ represents the learning rate, which controls how much newly acquired information overrides older information. 
+An $\alpha$ of $0$ would mean the agent learns nothing from its environment, whereas an $\alpha$ of $1$ would make the agent ignore all past experiences and only consider the most recent reward.
+Therefore, a high $\alpha$ allows the agent to update its beliefs very quickly, which can be useful in dynamic environments, while a low $\alpha$ ensures stable convergence but makes the learning process significantly slower. \\
+
+In the context of the Prisoner's Dilemma, setting an appropriate learning rate is important.
+If $\alpha$ is too high, the agent's Q-values will be overly sensitive to noise or stochastic opponent behaviors, leading to oscillating policies and preventing convergence.
+If $\alpha$ is too low, the agent will require an unrealistic number of rounds to reach the optimal strategy, exploring poorly before settling down.
+Thus, a moderate value strikes the right balance between rapid adaptation and Q-value stability. \\
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.70\textwidth]{img/alpha_impact_ttft.png}
+  \caption{Impact of the learning rate ($\alpha$) on the convergence against \texttt{TwoTitsForTat}.}
+  \label{fig:alpha_impact}
+\end{figure}
+
+Againsts TwoTitsForTat, which is a more punitive version of TitForTat, the agent converges to a lower cooperation rate with extreme values of $\alpha$. Against this strategy, cooperation is the optimal strategy, yet the agent struggles to converge to it with extreme values of $\alpha$.
+If $\alpha$ is too high, the agent will tend to forget the past quickly, and since TwoTitsForTat is punishing with a two turns delay, the agent will not be able to learn the optimal strategy (or be highly volatile as we see). Since the exploration decay is at play at the same time, the odds of converging to a suboptimal strategy not negligible. 
+The same way, if $\alpha$ is too low, the exploration rate being high at the beginning, the agent will not learn the optimal strategy against a highly punitive strategy before the exploration rate drops too low (as he will get punished a lot at the beginning). \\
+
+For our simulation, we choose a standard value of $\alpha = 0.1$, ensuring reliable convergence across all tested adversaries.
+
+\subsection{Impact of $\gamma$, discount factor}
+
+The discount factor $\gamma$ determines the agent's horizon, controlling the importance of future rewards.
+A $\gamma$ of $0$ makes the agent only seeking to maximize the reward of the current turn, ignoring any future consequences. Conversely, a $\gamma$ close to $1$ implies that the agent values long-term cumulative returns almost as much as immediate pay-offs.
+Therefore, a high $\gamma$ allows the agent to grasp the delayed effects of its actions, while a low $\gamma$ restricts its optimization to the immediate step. \\
+In the Iterated Prisoner's Dilemma, $\gamma$ is the most critical parameter for the emergence of cooperation. It is pretty intuitive, if you have two agent facing each other and they know that they will not play together again, they will not have any incentive to cooperate. Conversely, if they know that they will play together again, they will have an incentive to cooperate. This incentive is all the more important that the number of remaining rounds is high. \\
+
+Because betraying always yields a higher immediate reward than cooperating ($4 > 3$), a myopic agent ($\gamma = 0$) will strictly prefer to defect.
+To mathematically calculate this threshold against \texttt{TitForTat}, it is the same as calculating future cashflows of a financial product to value it. We compare the sum of discounted rewards for always cooperating ($V_C$) and always betraying ($V_B$):
+\begin{equation*}
+    V_C = \sum_{t=0}^{\infty} 3\gamma^t = \frac{3}{1-\gamma}
+    \quad \text{and} \quad
+    V_B = 4 + \sum_{t=1}^{\infty} 1\gamma^t = 4 + \frac{\gamma}{1-\gamma}
+\end{equation*}
+For the agent to rationally prefer cooperation, we must have $V_C > V_B$, which yields:
+\begin{equation*}
+    \frac{3}{1-\gamma} > 4 + \frac{\gamma}{1-\gamma} \;\implies\; 3 > 4(1-\gamma) + \gamma \;\implies\; 3 > 4 - 3\gamma \;\implies\; \gamma > \frac{1}{3}
+\end{equation*}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.70\textwidth]{img/gamma_impact.png}
+  \caption{Impact of the discount factor ($\gamma$) on the cooperation rate against \texttt{TitForTat}. The gamma limit in theory is well found in our simulation.}
+  \label{fig:gamma_impact}
+\end{figure}
+
+For our simulation, we choose a high value of $\gamma = 0.9$, ensuring that the agent cares deeply about future interactions and is mathematically capable of establishing cooperative behaviors.
+
+\section{Experimental Results}
+\label{sec:results}
+
+Now that we have set the parameters of our Q-learning agent, and have seen the results against a set of different strategies, we obviously want to see if cooperation can emerge in a population of Q-learning agents without any prior knowledge. \\
+
+\subsection{Two Q-learning agents}
+\label{sec:two_ql_agents}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/convergence_2Q.png}
+  \caption{Evolution of the cooperation rate for two Q-learning agents playing against each other.}
+  \label{fig:convergence_2Q}
+\end{figure}
+
+This is by far the most encouraging result we have obtained so far. The two agents start by exploring their environment, and then they start to converge to mutual cooperation. This is impressive as it shows that cooperation can emerge in a population of Q-learning agents without any prior knowledge. \\
+
+Through the different simulations we have run, we have seen that the cooperation rate always converges to a value close to 1 (the noise we see after corresponds to the exploration rate of both agents that can interfer with the optimal strategy). \\
+
+Another intresting thing to notice is that the two agents always tend to not cooperate at the beginning of the simulation. On Figure~\ref{fig:convergence_2Q}, we can see that the two agents start by betraying each other. Just like for other simulations, once the exploration rate drops, the agents start to converge to mutual cooperation. This can be explained that having a non zero exploration rate and discovering the temporary higher reward of betraying, the agents will tend to betray each other. However, once the exploration rate drops, the agents will sharply converge to mutual cooperation. \\
+
+In our setup, it is also interesting to see that the convergence toward the optimal strategy takes approximately the same time ($\approx 30000$ turns). It is not necessarily straightforward as we could think in a first place that it would be faster against a pre-programmed strategy. This result highlights the crucial role of the exploration rate in the convergence of the Q-learning agents. \\
+
+\subsection{Q-learning agents in a population of strategies}
+\label{sec:ql_agents_population}
+
+As demonstrated in Section~\ref{sec:two_ql_agents}, mutual cooperation reliably emerges between two Q-learning agents. This leads to a canonical question in evolutionary game theory \citep{axelrod1984}: can cooperation be sustained in a hostile environment? While unconditional cooperators quickly go extinct when facing defectors, adaptive agents theoretically possess the behavioral flexibility to defend themselves while selectively cooperating with like-minded individuals. \\
+
+To test this hypothesis, we simulate a small population of 10 players, deliberately constructing a negative environment dominated by unconditionally defecting agents. The population consists of a majority of 7 \texttt{AlwaysBetray} agents and a minority of 3 \texttt{QLearningStrategy} agents. \\
+
+The final averaged scores across the 100,000 rounds (for each pair of agents) reveal that the Q-learning minority significantly outperforms the \texttt{AlwaysBetray} majority. This counter-intuitive success stems directly from the adaptive nature of Q-learning. Against the 7 defectors, the Q-learners rapidly learn to protect themselves by defecting in return, securing the mutual defection payoff ($P=1$). However, when paired against the other 2 Q-learners in the population, they successfully converge toward mutual cooperation, earning the higher reward ($R=3$). \\
+
+\begin{table}[H]
+  \centering
+  \caption{Average final scores per round in a mixed population (3 \texttt{QLearning}, 7 \texttt{AlwaysBetray}).}
+  \label{tab:population_scores}
+  \begin{tabular}{lc}
+    \toprule
+    \textbf{Strategy} & \textbf{Average Score / Round} \\
+    \midrule
+    \texttt{QLearningStrategy} & 924 653  \\
+    \texttt{AlwaysBetray}      & 908 616 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+
+This result highlights a fundamental property of multi-agent reinforcement learning in social dilemmas: even when placed in a predominantly negative environment, a minority of adaptive agents can prosper.\\
+
+Having only 30\% of Q-learning agents in the population is enough to make them prosper. Finally, this experiment takes places is the most hostile possible environment, the final score is even higher with more rounds, more Q-learning agents, or a less hostile environment. \\
+\newpage
+\subsection{Discussions}
+\label{sec:discussions}
+
+While our results demonstrate the robust capability of Q-learning in the Iterated Prisoner's Dilemma, there are several limitations to our study that are worth discussing. \\
+
+First, our model relies on a highly restricted state space representation. We assumed that the state of the game can be fully described by the actions played in the immediately preceding round (a memory of size one). This makes tabular computation extremely efficient and allows for fast convergence. However, it severely limits the agent's capacity to recognize and adapt to more complex strategies that operate over longer time horizons.\\ 
+
+Second, the standard Q-learning algorithm assumes a stationary environment. When a Q-learning agent plays against another learning agent, the environment becomes non-stationary because the opponent's policy is continuously evolving. Although our empirical results show that the agents manage to converge to mutual cooperation, the theoretical guarantees of standard Q-learning convergence do not strictly apply in such settings.\\
+
+Third, our reward framework only assumes rational self-interest. The Bellman equation is parameterized solely to maximize the agent's own cumulative discounted payoff. While this fits classical game theory, it breaks away from behavioral economics findings, which show that humans often possess "other-regarding preferences"---valuing fairness, equity, or collective welfare. By optimizing strictly for personal gain, our agent may not be reflecting the human behavior that we want to model.
+
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+This project confirmed that an agent equipped with Q-learning can autonomously learn highly effective strategies in the Iterated Prisoner's Dilemma, without any prior knowledge of the game's payoffs. Our key findings are:
+
+\begin{itemize}
+    \item \textbf{Exploitation of naive agents:} The Q-learner successfully converges to the Nash equilibrium of systematic defection against opponents that do not punish betrayal.
+    \item \textbf{Emergence of cooperation:} Mutual cooperation emerges against reactive strategies like \texttt{TitForTat}, provided the agent values future interactions ($\gamma > \frac{1}{3}$) and explores sufficiently slowly.
+    \item \textbf{Spontaneous mutual cooperation:} Two independent Q-learning agents playing against each other reliably discover and converge to mutual cooperation from scratch.
+    \item \textbf{Resilience in hostile environments:} Even when heavily outnumbered by unconditional defectors, a minority of Q-learning agents prospers by dynamically adapting: they defect to defend against hostile agents, while maintaining rewarding cooperation among themselves.
+\end{itemize}
+
+\newpage
+\bibliography{references}
+
+\end{document}

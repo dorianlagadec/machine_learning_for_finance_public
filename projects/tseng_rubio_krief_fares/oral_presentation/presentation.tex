@@ -1,0 +1,369 @@
+\documentclass[10pt, aspectratio=169]{beamer}
+
+% ── Theme & colours ──────────────────────────────────────────────────────────
+\usetheme{metropolis}
+\usepackage{appendixnumberbeamer}
+
+\definecolor{dauphine}{RGB}{0, 62, 120}      % dark navy
+\definecolor{dauphinelight}{RGB}{210, 225, 242}
+\definecolor{accent}{RGB}{180, 30, 45}        % muted red
+
+\setbeamercolor{frametitle}{bg=dauphine, fg=white}
+\setbeamercolor{progress bar}{fg=accent}
+\setbeamercolor{title separator}{fg=accent}
+\setbeamercolor{alerted text}{fg=accent}
+\setbeamercolor{block title}{bg=dauphinelight, fg=dauphine}
+\setbeamercolor{block body}{bg=dauphinelight!40}
+
+% ── Packages ─────────────────────────────────────────────────────────────────
+\usepackage{booktabs}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18}
+\usepackage{caption}
+\usepackage{microtype}
+\usepackage{hyperref}
+
+% ── Metadata ─────────────────────────────────────────────────────────────────
+\title{Reinforcement Learning in the\\Iterated Prisoner's Dilemma}
+\subtitle{Convergence and Comparative Analysis of Strategies}
+\author{Gabriel Tseng \and Axel Rubio \and Benjamin Krief \and Krea Fares}
+\institute{Master 203 — Université Paris-Dauphine \\ Machine Learning Course}
+\date{March 23, 2026}
+
+% ── Custom commands ───────────────────────────────────────────────────────────
+\newcommand{\C}{\textbf{C}}
+\newcommand{\B}{\textbf{B}}
+
+% ─────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+\maketitle
+
+% ── Outline ──────────────────────────────────────────────────────────────────
+\begin{frame}{Outline}
+  \tableofcontents[hideallsubsections]
+\end{frame}
+
+% =============================================================================
+\section{The Prisoner's Dilemma}
+% =============================================================================
+
+\begin{frame}{The Prisoner's Dilemma}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \textbf{One-shot game.} Two players simultaneously choose to \alert{cooperate (C)} or \alert{betray (B)}.\\[0.8em]
+
+      Payoffs satisfy \(T > R > P > S\):
+      \begin{itemize}
+        \item \(T = 4\) — temptation to defect
+        \item \(R = 3\) — mutual cooperation
+        \item \(P = 1\) — mutual defection
+        \item \(S = 0\) — sucker's payoff
+      \end{itemize}
+      \vspace{0.6em}
+      \textbf{Core tension.} Betraying is strictly dominant, yet \((B,B) = (1,1)\) is Pareto-dominated by \((C,C) = (3,3)\).
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \centering
+      \vspace{0.5em}
+      \begin{tabular}{lcc}
+        \toprule
+                    & \C     & \B     \\
+        \midrule
+        \C          & (3,\,3) & (0,\,4) \\
+        \B          & (4,\,0) & (1,\,1) \\
+        \bottomrule
+      \end{tabular}
+      \vspace{0.4em}
+      \captionof*{table}{Payoff matrix (row = Player 1)}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{The Iterated Version (IPD)}
+  \begin{itemize}
+    \item Repetition changes the analysis: defection can now be \emph{punished}, cooperation \emph{rewarded}.
+    \item Axelrod (1984) showed that \textbf{Tit for Tat} — cooperate first, then mirror — wins computer tournaments against a wide strategy set.
+  \end{itemize}
+  \vspace{0.8em}
+  \begin{block}{Research question}
+    Can a Q-learning agent learn an effective strategy in the IPD, and under what conditions does it converge to cooperation or defection?
+  \end{block}
+\end{frame}
+
+% =============================================================================
+\section{Experimental Setup}
+% =============================================================================
+
+\begin{frame}{Simulator Architecture \& Strategy Set}
+  \begin{columns}[T]
+    \begin{column}{0.48\textwidth}
+      \textbf{Architecture.}\\
+      All pairs played exhaustively for \(T = 100{,}000\) rounds.
+      \vspace{0.8em}
+
+      \textbf{Naive strategies}
+      \begin{itemize}
+        \item AlwaysCooperate / AlwaysBetray
+        \item RandomAction (\(p = 0.5\))
+        \item ProbaCooperation (\(p\) configurable)
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.48\textwidth}
+      \textbf{Reactive strategies}
+      \begin{itemize}
+        \item TitForTat (TFT)
+        \item SuspiciousTFT
+        \item TitForTwoTats (lenient)
+        \item TwoTitsForTat (punitive)
+        \item Joss (TFT + noise)
+        \item DiscriminatingAltruist
+        \item Bully
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% =============================================================================
+\section{The Q-Learning Model}
+% =============================================================================
+
+\begin{frame}{Mathematical Formulation}
+  \textbf{State space.} \(s_t = (\text{own action}_{t-1},\; \text{opponent action}_{t-1})\).\\[0.4em]
+  \textbf{Action space.} \(\mathcal{A} = \{C, B\}\).\\[0.4em]
+  \textbf{Reward.} \(r_t\) = payoff matrix value at round \(t\).\\[0.8em]
+
+  \textbf{Bellman update rule:}
+  \[
+    Q(s_t, a_t) \;\leftarrow\; Q(s_t, a_t) + \alpha\Bigl[r_t + \gamma \max_{a'} Q(s_{t+1}, a') - Q(s_t, a_t)\Bigr]
+  \]
+  \vspace{0.5em}
+  \textbf{\(\varepsilon\)-greedy policy.} Explore with prob.\ \(\varepsilon\), exploit with prob.\ \(1-\varepsilon\).\\
+  \(\varepsilon\) decays multiplicatively: starts at 1, floors at 0.01.\\[0.8em]
+
+
+\end{frame}
+
+% =============================================================================
+\section{Hyperparameter Sensitivity}
+% =============================================================================
+
+\begin{frame}{Hyperparameter Sensitivity — Summary}
+  \begin{columns}[T]
+    \begin{column}{0.32\textwidth}
+      \textbf{\(\varepsilon\) — Exploration}\\[0.4em]
+      Start at 1, decay to 0.01.\\
+      Too-fast decay \(\Rightarrow\) premature exploitation of a suboptimal policy.\\
+      Too-slow \(\Rightarrow\) still exploring at convergence.\\[0.4em]
+      Chosen: \(\varepsilon_{\text{decay}} = 0.9999\).
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \textbf{\(\alpha\) — Learning Rate}\\[0.4em]
+      Too high: Q-values volatile, oscillating policy.\\
+      Too low: converges before learning against punitive strategies.\\[0.4em]
+      Chosen: \(\alpha = 0.1\), robust across all opponents.
+    \end{column}
+    \begin{column}{0.32\textwidth}
+      \textbf{\(\gamma\) — Discount Factor}\\[0.4em]
+      Most critical parameter.\\
+      Theoretical threshold \(\gamma > \tfrac{1}{3}\) confirmed empirically.\\[0.4em]
+      Chosen: \(\gamma = 0.9\).\\[0.4em]
+      Analogy: valuing future payoffs like a long-term asset.
+    \end{column}
+  \end{columns}
+  \vspace{1em}
+  
+  \textbf{Chosen hyperparameters:}
+  \[
+    \alpha = 0.1, \quad \gamma = 0.9, \quad \varepsilon_0 = 1.0, \quad \varepsilon_{\min} = 0.01, \quad \varepsilon_{\text{decay}} = 0.9999
+  \]
+\end{frame}
+
+\begin{frame}{Key Finding — The \(\gamma\) Threshold}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      Since \(T > R\) (betrayal always beats cooperation immediately), a myopic agent always defects.\\[0.6em]
+      Comparing discounted value streams against TitForTat:
+      \[
+        V_C = \frac{3}{1-\gamma}, \qquad V_B = 4 + \frac{\gamma}{1-\gamma}
+      \]
+      Cooperation is rational iff \(V_C > V_B\):
+      \[
+        \frac{3}{1-\gamma} > 4 + \frac{\gamma}{1-\gamma} \;\Longrightarrow\; \boxed{\gamma > \tfrac{1}{3}}
+      \]
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}
+        \item This threshold is \alert{exactly recovered empirically} in our simulations (Figure 5).
+        \item The analogy to discounting future cash flows of a financial product is direct: cooperation is the long-term investment.
+        \item Our chosen \(\gamma = 0.9\) comfortably clears the threshold.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{\(\gamma\) Threshold}
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img/gamma_impact.png}
+  \end{figure}
+\end{frame}
+
+% =============================================================================
+\section{Results}
+% =============================================================================
+
+\begin{frame}{Against Naive Strategies}
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=0.75\textwidth]{img/naive_coop.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Against Naive Strategies}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \centering
+      \begin{tabular}{lcccc}
+        \toprule
+        Strategy & Coop. & Exploit. & Vict. & Mut.C \\
+        \midrule
+        AlwaysCooperate      & 1.4\%  & 98.6\% & 0\%   & 1.4\%  \\
+        AlwaysBetray         & 1.4\%  & 0\%    & 1.4\% & 0\%    \\
+        RandomAction         & 2.6\%  & 48.7\% & 1.3\% & 1.3\%  \\
+        ProbaCoop.\ (0.7)    & 2.5\%  & 68.2\% & 0.8\% & 1.8\%  \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}
+        \item Agent converges to \alert{systematic defection} in all cases.
+        \item Residual cooperation (\(\sim\!1\%\)) is exploration noise, not learned behaviour.
+        \item Exploitation rate tracks opponent cooperation probability closely.
+        \item \textbf{Conclusion:} punishment of defection is necessary for cooperation to emerge.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
+\begin{frame}{Against Reactive Strategies}
+  \begin{columns}[T]
+    \begin{column}{0.52\textwidth}
+      \centering
+      \small
+      \begin{tabular}{lcccc}
+        \toprule
+        Strategy & Coop. & Exploit. & Vict. & Mut.C \\
+        \midrule
+        TitForTat              & 98.6\% & 1.2\%  & 1.2\%  & 97.4\% \\
+        SuspiciousTFT          & 98.6\% & 1.2\%  & 1.2\%  & 97.4\% \\
+        TwoTitsForTat          & 98.5\% & 1.0\%  & 2.2\%  & 96.3\% \\
+        Joss                   & 98.4\% & 1.2\%  & 11.0\% & 87.4\% \\
+        TitForTwoTats          & 50\%   & 49.8\% & 0.7\%  & 49.3\% \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.44\textwidth}
+      \begin{itemize}
+        \item Cooperation emerges against \textbf{TFT and variants}.
+        \item Against \textbf{TitForTwoTats}: agent exploits leniency, defecting every other round — 50\% cooperation, only 0.7\% victimised.
+        \item \textbf{Joss}: stochastic defection exploits the converged policy (11\% victimisation).
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+\begin{frame}{Two Q-Learning Agents — Spontaneous Cooperation}
+  \begin{figure}[H]
+  \centering
+  \includegraphics[width=1\textwidth]{img/convergence_2Q.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}{Two Q-Learning Agents — Spontaneous Cooperation}
+  \begin{columns}[T]
+    \begin{column}{0.50\textwidth}
+      \begin{itemize}
+        \item Both agents start from zero knowledge.
+        \item Initial phase: mutual betrayal (high \(\varepsilon\), temporary reward from defection).
+        \item As \(\varepsilon\) decays, both agents \alert{sharply converge to mutual cooperation}.
+        \item Cooperation rate \(\to 1\) consistently across all simulation runs.
+        \item Convergence takes \(\approx 30{,}000\) turns — comparable to convergence against pre-programmed strategies, underlining the role of exploration decay.
+      \end{itemize}
+    \end{column}
+    \begin{column}{0.46\textwidth}
+      \small
+      \textbf{Why this matters.} Cooperation is not programmed — it \emph{emerges} from self-interest and repeated interaction alone.
+    \end{column}
+  \end{columns}
+\end{frame}
+
+\begin{frame}{Q-Learners in a Hostile Population}
+  \textbf{Setup.} 10 agents: 7 AlwaysBetray + 3 QLearningStrategy. 100\,000 rounds per pair.
+
+  \vspace{0.8em}
+  \begin{columns}[T]
+    \begin{column}{0.44\textwidth}
+      \centering
+      \begin{tabular}{lc}
+        \toprule
+        Strategy & Avg.\ Score/Round \\
+        \midrule
+        \textbf{QLearningStrategy} & \textbf{924\,653} \\
+        AlwaysBetray               & 908\,616          \\
+        \bottomrule
+      \end{tabular}
+    \end{column}
+    \begin{column}{0.52\textwidth}
+      \begin{itemize}
+        \item Q-learners \alert{outperform the defector majority} despite being a 30\% minority.
+        \item Against the 7 defectors: learn to defect back (\(P = 1\) per round).
+        \item Against each other: converge to cooperation (\(R = 3\) per round).
+        \item Even 30\% Q-learning penetration is sufficient to generate outperformance.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+
+
+% =============================================================================
+\section{Conclusion}
+% =============================================================================
+
+\begin{frame}{Conclusion}
+  \begin{block}{Key takeaways}
+    \begin{itemize}
+      \item Against non-punishing opponents, Q-learning converges to systematic defection — consistent with Nash equilibrium.
+      \item Against retaliatory strategies (TFT and variants), cooperation may arise, provided \(\gamma > \tfrac{1}{3}\).
+      \item Two independent Q-agents discover mutual cooperation from scratch.
+      \item A minority of Q-agents outperforms majority in a hostile population.
+    \end{itemize}
+  \end{block}
+  \vspace{0.6em}
+  \textbf{Limitations.}
+  Memory depth of 1 limits recognition of longer-horizon strategies.
+  Non-stationarity when two Q-agents face each other breaks convergence guarantees.
+  Purely self-interested reward — no other-regarding preferences.
+\end{frame}
+
+% ── References ───────────────────────────────────────────────────────────────
+\begin{frame}[allowframebreaks]{References}
+  \small
+  \begin{itemize}
+    \item Robert Axelrod. \textit{The Evolution of Cooperation}. Basic Books, 1984.
+    \item Steven Kuhn. Prisoner's dilemma. \textit{Stanford Encyclopedia of Philosophy}, 2019.
+    \item Albert W.\ Tucker. A two-person dilemma. Mimeograph, Stanford University, 1950.
+  \end{itemize}
+\end{frame}
+
+\end{document}
